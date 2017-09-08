@@ -101,113 +101,6 @@ namespace CustomControl
     #endregion
 
     #region TabPages
-    public interface IPage
-    {
-        GameObject Root { get; }
-        void Init();
-    }
-
-    public interface IPageWithInit : IPage
-    {
-       
-    }
-
-    public class TabPagesManager
-    {
-        private List<IPage> pages = new List<IPage>();
-
-        public TabPagesManager()
-        {
-
-        }
-
-        public TabPagesManager(IPage[] pages)
-        {
-            for (int i = 0; i < pages.Length; i++)
-            {
-                this.pages.Add(pages[i]);
-            }
-        }
-        
-        public void AddPage(IPage page)
-        {
-            this.pages.Add(page);
-        }
-
-        public void SwitchTo(IPage view)
-        {
-            foreach (var page in this.pages)
-            {
-                if (view == page)
-                {
-                    if (null != page.Root)
-                    {
-                        page.Root.SetActive(true);
-                    }
-                }
-                else
-                {
-                    page.Init();
-                    if (null != page.Root)
-                    {
-                        page.Root.SetActive(false);
-                    }
-                }
-            }
-        }
-    }
-    
-    public interface IPageNew
-    {
-        GameObject Root { get; }
-        System.Action Init { get; set; }
-    }
-
-    public class TabPagesManagerNew
-    {
-        private List<IPage> pages = new List<IPage>();
-
-        public TabPagesManagerNew()
-        {
-
-        }
-
-        public TabPagesManagerNew(IPage[] pages)
-        {
-            for (int i = 0; i < pages.Length; i++)
-            {
-                this.pages.Add(pages[i]);
-            }
-        }
-        
-        public void AddPage(IPage page)
-        {
-            this.pages.Add(page);
-        }
-
-        public void SwitchTo(IPage view)
-        {
-            foreach (var page in this.pages)
-            {
-                if (view == page)
-                {
-                    if (null != page.Root)
-                    {
-                        page.Root.SetActive(true);
-                    }
-                }
-                else
-                {
-                    page.Init();
-                    if (null != page.Root)
-                    {
-                        page.Root.SetActive(false);
-                    }
-                }
-            }
-        }
-    }
-
     public abstract class TabPage
     {
         public abstract GameObject Root{get;}
@@ -217,18 +110,17 @@ namespace CustomControl
         }
     }
 
-
-    public class TabPagesManagerTest
+    public class TabPagesManager
     {
         private List<TabPage> pages = new List<TabPage>();
         private List<UIButton> _btnList = new List<UIButton>();
 
-        public TabPagesManagerTest()
+        public TabPagesManager()
         {
 
         }
 
-        public TabPagesManagerTest(TabPage[] pages)
+        public TabPagesManager(TabPage[] pages)
         {
             for (int i = 0; i < pages.Length; i++)
             {

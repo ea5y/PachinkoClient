@@ -44,6 +44,7 @@ namespace Asobimo.Pachinko
 
             this.SetState(_data.StateType);
             this.SetDisplay();
+            this.SetBtnEvent();
         }
 
         public void SetState(PachinkoStateType stateType)
@@ -114,6 +115,7 @@ namespace Asobimo.Pachinko
 
         private void SetBtnEvent()
         {
+            this.BtnEnter.onClick.Clear();
             EventDelegate.Add(this.BtnEnter.onClick, ()=>{
                     _pachinko.Enter();
                     });
