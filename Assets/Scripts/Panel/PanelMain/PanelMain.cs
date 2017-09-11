@@ -66,6 +66,7 @@ namespace Asobimo.Pachinko
             base.Awake();
             this.Init();
             this.RegisterBtnEvent();
+            PanelManager.Open(this.gameObject);
         }
 
         private void Init()
@@ -154,7 +155,7 @@ namespace Asobimo.Pachinko
             throw new NotImplementedException();
         }
 
-        public override void Open()
+        public override void Open(object data)
         {
             throw new NotImplementedException();
         }

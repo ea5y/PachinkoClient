@@ -6,6 +6,7 @@
 
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Asobimo.Pachinko
 {
@@ -30,19 +31,65 @@ namespace Asobimo.Pachinko
             }
         }
 
-        public abstract void Open();
+        public abstract void Open(object data);
         public abstract void Close();
         public abstract void Back();
 
         public virtual void Home()
         {
-
+            PanelManager.Home();
         }
 
         protected void Destroy()
         {
             Debug.Log("Panel Destory");
             Inst = null;
+        }
+    }
+
+    public class PanelManager
+    {
+        private static Stack<GameObject> _stack = new Stack<GameObject>();
+        public static void Open(GameObject panelGameObj)
+        {
+            HidePrev();
+            panelGameObj.SetActive(true);
+            _stack.Push(panelGameObj);
+        }
+
+        private static void HideAll()
+        {
+            foreach(var panel in _stack)
+            {
+                panel.SetActive(false);
+            }
+        }
+
+        private static void HidePrev()
+        {
+            if(_stack.Count > 0)
+            {
+                var panel = _stack.Peek();
+                panel.SetActive(false);
+            }
+        }
+
+        public static void Home()
+        {
+            while(true)
+            {
+                var panel = _stack.Peek();
+                if(panel.name == "PanelMain")
+                {
+                    panel.SetActive(true);
+                    break;
+                }
+                else
+                {
+                    panel.SetActive(false);
+                    _stack.Pop();
+                }
+            }
         }
     }
 }

@@ -213,6 +213,10 @@
     <Compile Include="Assets\Scripts\Panel\PanelMain\PanelMain.cs" />
     <Compile Include="Assets\Scripts\Base\Pachinko.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelMain\ScrollItemMain.cs" />
+    <Compile Include="Assets\Scripts\Panel\PanelGame\PanelGame.cs" />
+    <Compile Include="Assets\Scripts\Base\Player.cs" />
+    <Compile Include="Assets\Scripts\Panel\PanelTopbar\PanelTopbar.cs" />
+    <Compile Include="Assets\Scripts\Panel\PanelResult\PanelResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />

@@ -18,7 +18,7 @@ namespace Asobimo.Pachinko
     
     public abstract class State
     {
-        public abstract void Enter();
+        public abstract void Enter(object data);
         public abstract void Start();
         public abstract void End();
         public virtual void Maintain()
@@ -36,9 +36,10 @@ namespace Asobimo.Pachinko
             _pachinko = pachinko;
         }
 
-        public override void Enter()
+        public override void Enter(object data)
         {
             Debug.Log("===>Enter");
+            PanelGame.Inst.Open(data);
         }
 
         public override void Start()
@@ -61,7 +62,7 @@ namespace Asobimo.Pachinko
             _pachinko = pachinko;
         }
 
-        public override void Enter()
+        public override void Enter(object data)
         {
             Debug.Log("===>Enter");
         }
@@ -86,7 +87,7 @@ namespace Asobimo.Pachinko
             _pachinko = pachinko;
         }
 
-        public override void Enter()
+        public override void Enter(object data)
         {
             Debug.LogError("===>Pachinko is Maintaining");
         }
@@ -113,7 +114,7 @@ namespace Asobimo.Pachinko
             _pachinko = pachinko;
         }
 
-        public override void Enter()
+        public override void Enter(object data)
         {
             Debug.Log("===>Enter");
         }
@@ -140,7 +141,7 @@ namespace Asobimo.Pachinko
             _pachinko = pachinko;
         }
 
-        public override void Enter()
+        public override void Enter(object data)
         {
             Debug.Log("===>Enter");
         }
@@ -181,9 +182,9 @@ namespace Asobimo.Pachinko
             this.State = UnoccupiedState;
         }
 
-        public void Enter()
+        public void Enter(object data)
         {
-            _state.Enter();
+            _state.Enter(data);
         }
 
         public void Start()

@@ -9,6 +9,12 @@ using System.Collections;
 using CustomControl;
 namespace Asobimo.Pachinko
 {
+    public class MachineData
+    {
+        public Pachinko  Pachinko;
+        public PachinkoData Data;
+    }
+
     public class PachinkoData : ScrollViewCellItemData
     {
         public PachinkoStateType StateType;
@@ -117,7 +123,8 @@ namespace Asobimo.Pachinko
         {
             this.BtnEnter.onClick.Clear();
             EventDelegate.Add(this.BtnEnter.onClick, ()=>{
-                    _pachinko.Enter();
+                    var data = new MachineData() { Pachinko = _pachinko, Data = _data };
+                    _pachinko.Enter(data);
                     });
         }
     }
