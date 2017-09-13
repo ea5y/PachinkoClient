@@ -12,20 +12,23 @@ namespace Asobimo.Pachinko
     public class PanelTopbar : PanelBase<PanelTopbar>
     {
         public UIButton BtnMenu;
+        public UIButton BtnBack;
         public UILabel LblBallsNum;
 
         public UIWidget CtPullDownList;
+        public UIGrid Grid;
         public UIButton BtnRest;
         public UIButton BtnAuto;
         public UIButton BtnFinish;
         public UIButton BtnStatus;
         public UIButton BtnShop;
+        public UIButton BtnExchange;
 
         public UIWidget CtStatus;
 
         public override void Back()
         {
-            throw new NotImplementedException();
+            //this.Home();
         }
 
         public override void Close()
@@ -42,11 +45,79 @@ namespace Asobimo.Pachinko
         {
             base.Awake();
             this.RegisterBtnEvent();
+            this.RegisterPlayerEvent();
+            Player.Inst.Init();
+        }
+
+        private void RegisterPlayerEvent()
+        {
+            Player.Inst.OnStateChanged += OnPlayerStateChanged;
+            Player.Inst.OnBallsNumChanged += OnPlayerBallsNumChanged;
+        }
+
+        private void OnPlayerStateChanged(object sender, PlayerStateArgs args)
+        {
+            this.SetPullDownList(args.State);
+        }
+
+        private void SetPullDownList(PlayerStateType state)
+        {
+            this.ClearPullDownList();
+            switch(state)
+            {
+                case PlayerStateType.None:
+                    this.SetBtnMenu(true);
+                    this.AddBtnToPullDownList(this.BtnShop.gameObject);
+                    this.AddBtnToPullDownList(this.BtnExchange.gameObject);
+                    break;
+                case PlayerStateType.Browsing:
+                    this.SetBtnMenu(false);
+                    break;
+                case PlayerStateType.Watching:
+                    this.SetBtnMenu(false);
+                    break;
+                case PlayerStateType.Playing:
+                    this.SetBtnMenu(true);
+                    this.AddBtnToPullDownList(this.BtnAuto.gameObject);
+                    this.AddBtnToPullDownList(this.BtnRest.gameObject);
+                    this.AddBtnToPullDownList(this.BtnFinish.gameObject);
+                    this.AddBtnToPullDownList(this.BtnStatus.gameObject);
+                    break;
+            }
+        }
+
+        private void SetBtnMenu(bool isMenu)
+        {
+            this.BtnBack.gameObject.SetActive(!isMenu);
+            this.BtnMenu.gameObject.SetActive(isMenu);
+        }
+
+        private void AddBtnToPullDownList(GameObject btn)
+        {
+            btn.SetActive(true);
+            var go = NGUITools.AddChild(this.Grid.gameObject, btn);
+            this.Grid.repositionNow = true;
+        }
+
+        private void ClearPullDownList()
+        {
+            this.Grid.gameObject.DestroyChild();
+        }
+
+        private void OnPlayerBallsNumChanged(object sender, PlayerBallsNumArgs args)
+        {
+            this.SetBallsNum(args.BallsNum);
+        }
+
+        private void SetBallsNum(int num)
+        {
+            this.LblBallsNum.text = num.ToString();
         }
 
         private void RegisterBtnEvent()
         {
             EventDelegate.Add(this.BtnMenu.onClick, ()=>{ this.OnBtnMenuClick(); });
+            EventDelegate.Add(this.BtnBack.onClick, ()=>{ this.OnBtnBackClick(); });
             EventDelegate.Add(this.BtnRest.onClick, ()=>{ this.OnBtnResetClick(); });
             EventDelegate.Add(this.BtnAuto.onClick, ()=>{ this.OnBtnAutoClick(); });
             EventDelegate.Add(this.BtnFinish.onClick, ()=>{ this.OnBtnFinishClick(); });
@@ -57,6 +128,11 @@ namespace Asobimo.Pachinko
         private void OnBtnMenuClick()
         {
             this.ShowPullDownList();
+        }
+
+        private void OnBtnBackClick()
+        {
+            PanelGame.Inst.Back();
         }
 
         private void ShowPullDownList()
@@ -75,7 +151,7 @@ namespace Asobimo.Pachinko
 
         private void OnBtnFinishClick()
         {
-            PanelResult.Inst.Open(null);
+            PanelGame.Inst.EndPlayGame();
             this.ShowPullDownList();
         }
 
@@ -90,6 +166,10 @@ namespace Asobimo.Pachinko
         }
 
         private void OnBtnShopClick()
+        {
+        }
+
+        private void OnBtnExchangeClick()
         {
         }
     }

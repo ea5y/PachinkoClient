@@ -22,10 +22,12 @@ namespace Asobimo.Pachinko
         public UILabel LblCurLevel;
         public UIButton BtnUp;
         public UIButton BtnDown;
-        public UIButton BtnHide;
+        public UIButton BtnToggle;
+        public UIButton BtnSwitch;
 
         public UIWidget CtStatus;
         public UIWidget CtOperation;
+        public GameObject GroupOperation;
 
         public UISprite ImgLeft;
         public UISprite ImgRight;
@@ -34,7 +36,8 @@ namespace Asobimo.Pachinko
 
         public override void Back()
         {
-            throw new NotImplementedException();
+            _machineData.Pachinko.Exit();
+            this.Home();
         }
 
         public override void Close()
@@ -47,6 +50,7 @@ namespace Asobimo.Pachinko
             _machineData = data as MachineData;
             this.Init();
             PanelManager.Open(this.gameObject);
+            this.SetCurPacinkoState(_machineData.Data.StateType);
         }
 
         private void Awake()
@@ -70,13 +74,69 @@ namespace Asobimo.Pachinko
         {
             EventDelegate.Add(this.BtnUp.onClick, ()=>{});
             EventDelegate.Add(this.BtnDown.onClick, ()=>{});
-            EventDelegate.Add(this.BtnHide.onClick, ()=>{
-                    var active = this.CtOperation.gameObject.activeSelf;
-                    this.SetOperation(!active);
+            EventDelegate.Add(this.BtnToggle.onClick, ()=>{
+                    this.OnBtnToggleClick();
+                    });
+            EventDelegate.Add(this.BtnSwitch.onClick, ()=>{
+                    this.OnBtnSwitchClick();
                     });
         }
 
-        private void SetCurPacinkoState(PachinkoStateType type)
+        private void OnEnable()
+        {
+            this.RegisterPlayerEvent();
+        }
+
+        private void OnDisable()
+        {
+            this.RemovePlayerEvent();
+        }
+
+        private void RegisterPlayerEvent()
+        {
+            Player.Inst.OnBallsNumChanged += OnPlayerBallsNumChanged;
+            Player.Inst.OnStateChanged += OnPlayerStateChanged;
+        }
+
+        private void RemovePlayerEvent()
+        {
+            Player.Inst.OnBallsNumChanged -= OnPlayerBallsNumChanged;
+            Player.Inst.OnStateChanged -= OnPlayerStateChanged;
+        }
+
+        private void OnPlayerBallsNumChanged(object sender, PlayerBallsNumArgs args)
+        {
+            
+        }
+
+        private void OnPlayerStateChanged(object sender, PlayerStateArgs args)
+        {
+            switch(args.State)
+            {
+                case PlayerStateType.None:
+                    break;
+                case PlayerStateType.Browsing:
+                    this.SetPlayerState("Browsing");
+                    this.SetOperation(true);
+                    this.ShowOperationParent(false);
+                    this.ShowStatus(false);
+                    break;
+                case PlayerStateType.Watching:
+                    this.SetPlayerState("Watching");
+                    this.SetOperation(false);
+                    this.ShowOperationParent(true);
+                    this.ShowStatus(true);
+                    break;
+                case PlayerStateType.Playing:
+                    this.SetPlayerState("Playing");
+                    this.SetOperation(true);
+                    this.ShowOperationParent(true);
+                    this.ShowStatus(true);
+                    break;
+            }
+        }
+
+        public void SetCurPacinkoState(PachinkoStateType type)
         {
             switch(type)
             {
@@ -85,6 +145,9 @@ namespace Asobimo.Pachinko
                     break;
                 case PachinkoStateType.Occupied:
                     this.SetOccupied();
+                    break;
+                case PachinkoStateType.Owned:
+                    this.SetOwned();
                     break;
                 case PachinkoStateType.Maintain:
                     this.SetMaintain();
@@ -100,28 +163,50 @@ namespace Asobimo.Pachinko
 
         private void SetOperation(bool isEnable)
         {
-            this.SetBtnHide(!isEnable);
-            this.ShowOperation();
+            this.BtnToggle.enabled = isEnable;
             if(isEnable)
             {
-                //NO hide
+                this.BtnToggle.SetState(UIButton.State.Normal, true);
             }
             else
             {
-                //Hide
+                this.BtnToggle.SetState(UIButton.State.Disabled, true);
+                this.ShowOperation(false);
             }
         }
 
-        private void ShowOperation()
+        private void ShowOperationParent(bool isShow)
         {
-            var active = this.CtOperation.gameObject.activeSelf;
-            this.CtOperation.gameObject.SetActive(!active);
+            this.BtnSwitch.gameObject.SetActive(!isShow);
+            this.GroupOperation.SetActive(isShow);
         }
 
-        private void SetBtnHide(bool isHide)
+        private void OnBtnToggleClick()
         {
-            this.ImgLeft.gameObject.SetActive(isHide);
-            this.ImgRight.gameObject.SetActive(!isHide);
+            var isShow = this.CtOperation.gameObject.activeSelf;
+            this.ShowOperation(!isShow);
+        }
+
+        private void OnBtnSwitchClick()
+        {
+            this.StartPlayGame();
+        }
+
+        private void StartPlayGame()
+        {
+            _machineData.Pachinko.Start();
+        }
+        
+        public void EndPlayGame()
+        {
+            _machineData.Pachinko.End();
+        }
+
+        private void ShowOperation(bool isShow)
+        {
+            this.ImgLeft.gameObject.SetActive(!isShow);
+            this.ImgRight.gameObject.SetActive(isShow);
+            this.CtOperation.gameObject.SetActive(isShow);
         }
 
         private void SetPlayerState(string state)
@@ -136,19 +221,26 @@ namespace Asobimo.Pachinko
 
         private void SetUnoccupied()
         {
-            this.SetPlayerState("Browsing");
-            this.SetOperation(true);
+            Player.Inst.State = PlayerStateType.Browsing;
+            _machineData.Pachinko.SetState(_machineData.Pachinko.UnoccupiedState);
         }
 
         private void SetOccupied()
         {
-            this.SetPlayerState("Waching");
-            this.SetOperation(false);
+            Player.Inst.State = PlayerStateType.Watching;
+            _machineData.Pachinko.SetState(_machineData.Pachinko.OccupiedState);
+        }
+
+        private void SetOwned()
+        {
+            Player.Inst.State = PlayerStateType.Playing;
+            _machineData.Pachinko.SetState(_machineData.Pachinko.OwnedState);
         }
 
         private void SetMaintain()
         {
             //@TODO To panel main
+            _machineData.Pachinko.SetState(_machineData.Pachinko.MaintainState);
         }
 
         private void SetReset()
@@ -168,8 +260,13 @@ namespace Asobimo.Pachinko
         public void ShowStatus()
         {
             var active = this.CtStatus.gameObject.activeSelf;
-            this.CtStatus.gameObject.SetActive(!active);
+            //this.CtStatus.gameObject.SetActive(!active);
+            this.ShowStatus(!active);
+        }
+
+        public void ShowStatus(bool isShow)
+        {
+            this.CtStatus.gameObject.SetActive(isShow);
         }
     }
 }
-

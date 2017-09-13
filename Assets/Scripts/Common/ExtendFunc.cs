@@ -5,7 +5,7 @@
 //================================
 
 using UnityEngine;
-public static class ExtendFunc
+public static class ExtendFunc 
 {
     public static void DestroyChild(this GameObject obj)
     {

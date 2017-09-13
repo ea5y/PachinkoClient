@@ -11,6 +11,7 @@ namespace Asobimo.Pachinko
     {
         Unoccupied,
         Occupied,
+        Owned,
         Maintain,
         Reset,
         LostConnection
@@ -25,6 +26,12 @@ namespace Asobimo.Pachinko
         {
             Debug.Log("===>Maintain");
         }
+
+        public virtual void Exit()
+        {
+            Debug.Log("===>Exit");
+            Player.Inst.State = PlayerStateType.None;
+        }
     }
 
     //The pachinko is unoccupied
@@ -38,18 +45,20 @@ namespace Asobimo.Pachinko
 
         public override void Enter(object data)
         {
-            Debug.Log("===>Enter");
+            Debug.Log("===>State(Unoccupied) Enter");
             PanelGame.Inst.Open(data);
+            //Player.Inst.State = PlayerStateType.Browsing;
         }
 
         public override void Start()
         {
-            Debug.Log("===>Start");
+            Debug.Log("====>State(Unoccupied) Start");
+            PanelGame.Inst.SetCurPacinkoState(PachinkoStateType.Owned);
         }
 
         public override void End()
         {
-            Debug.LogError("===>Pachinko is be Unoccupied");
+            Debug.LogError("===>State(Unoccupied) Pachinko is be Unoccupied");
         }
     }
 
@@ -64,17 +73,45 @@ namespace Asobimo.Pachinko
 
         public override void Enter(object data)
         {
-            Debug.Log("===>Enter");
+            Debug.Log("===>State(Occupied) Enter");
+            PanelGame.Inst.Open(data);
         }
 
         public override void Start()
         {
-            Debug.LogError("===>Pachinko is be Occupied");
+            Debug.LogError("===>State(Occupied) Pachinko is be Occupied");
         }
 
         public override void End()
         {
-            Debug.Log("===>End");
+            Debug.LogError("===>State(Occupied) Pachinko is be Occupied");
+        }
+    }
+
+    //The machine is yours
+    public class OwnedState : State
+    {
+        private Pachinko _pachinko;
+        public OwnedState(Pachinko pachinko)
+        {
+            _pachinko = pachinko;
+        }
+
+        public override void Enter(object data)
+        {
+            Debug.LogError("===>State(Owned) Pachinko is Owned");
+        }
+
+        public override void Start()
+        {
+            Debug.LogError("===>State(Owned) Pachinko is Owned");
+        }
+
+        public override void End()
+        {
+            Debug.Log("===>State(Owned) End");
+            PanelGame.Inst.SetCurPacinkoState(PachinkoStateType.Unoccupied);
+            PanelResult.Inst.Open(null);
         }
     }
 
@@ -89,17 +126,17 @@ namespace Asobimo.Pachinko
 
         public override void Enter(object data)
         {
-            Debug.LogError("===>Pachinko is Maintaining");
+            Debug.LogError("===>State(Maintain) Pachinko is Maintaining");
         }
 
         public override void Start()
         {
-            Debug.LogError("===>Pachinko is Maintaining");
+            Debug.LogError("===>State(Maintain) Pachinko is Maintaining");
         }
 
         public override void End()
         {
-            Debug.LogError("===>Pachinko is Maintaining");
+            Debug.LogError("===>State(Maintain) Pachinko is Maintaining");
         }
     }
 
@@ -116,17 +153,18 @@ namespace Asobimo.Pachinko
 
         public override void Enter(object data)
         {
-            Debug.Log("===>Enter");
+            Debug.Log("===>State(Reset) Enter");
+            Player.Inst.State = PlayerStateType.Browsing;
         }
 
         public override void Start()
         {
-            Debug.LogError("===>Pachinko is Resetting");
+            Debug.LogError("===>State(Reset) Pachinko is Resetting");
         }
 
         public override void End()
         {
-            Debug.LogError("===>Pachinko is Resetting");
+            Debug.LogError("===>State(Reset) Pachinko is Resetting");
         }
     }
 
@@ -143,17 +181,18 @@ namespace Asobimo.Pachinko
 
         public override void Enter(object data)
         {
-            Debug.Log("===>Enter");
+            Debug.Log("===>State(LostConnection) Enter");
+            Player.Inst.State = PlayerStateType.Browsing;
         }
 
         public override void Start()
         {
-            Debug.LogError("===>Pachinko is LostConnectioning");
+            Debug.LogError("===>State(LostConnection) Pachinko is LostConnectioning");
         }
 
         public override void End()
         {
-            Debug.LogError("===>Pachinko is LostConnectioning");
+            Debug.LogError("===>State(LostConnection) Pachinko is LostConnectioning");
         }
     }
 
@@ -161,6 +200,7 @@ namespace Asobimo.Pachinko
     {
         public readonly State UnoccupiedState;
         public readonly State OccupiedState;
+        public readonly State OwnedState;
         public readonly State MaintainState;
         public readonly State ResetState;
         public readonly State LostConnectionState;
@@ -176,6 +216,7 @@ namespace Asobimo.Pachinko
         {
             this.UnoccupiedState = new UnoccupiedState(this);
             this.OccupiedState = new OccupiedState(this);
+            this.OwnedState = new OwnedState(this);
             this.MaintainState = new MaintainState(this);
             this.ResetState = new ResetState(this);
             this.LostConnectionState = new LostConnectionState(this);
@@ -197,9 +238,19 @@ namespace Asobimo.Pachinko
             _state.End();
         }
 
+        public void Exit()
+        {
+            _state.Exit();
+        }
+
         public void Maintain()
         {
             _state.Maintain();
+        }
+
+        public void SetState(State state)
+        {
+            _state = state;
         }
     }
 }
