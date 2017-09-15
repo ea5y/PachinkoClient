@@ -13,7 +13,8 @@ namespace Asobimo.Pachinko
         None,
         Browsing,
         Watching,
-        Playing
+        Playing,
+        Exchange
     }
 
     public class PlayerStateArgs : EventArgs

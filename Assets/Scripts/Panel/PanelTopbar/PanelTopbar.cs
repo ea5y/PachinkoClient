@@ -83,6 +83,9 @@ namespace Asobimo.Pachinko
                     this.AddBtnToPullDownList(this.BtnFinish.gameObject);
                     this.AddBtnToPullDownList(this.BtnStatus.gameObject);
                     break;
+                case PlayerStateType.Exchange:
+                    this.SetBtnMenu(false);
+                    break;
             }
         }
 
@@ -123,6 +126,7 @@ namespace Asobimo.Pachinko
             EventDelegate.Add(this.BtnFinish.onClick, ()=>{ this.OnBtnFinishClick(); });
             EventDelegate.Add(this.BtnStatus.onClick, ()=>{this.OnBtnStatusClick(); });
             EventDelegate.Add(this.BtnShop.onClick, ()=>{this.OnBtnShopClick(); });
+            EventDelegate.Add(this.BtnExchange.onClick, ()=>{this.OnBtnExchangeClick();});
         }
 
         private void OnBtnMenuClick()
@@ -132,7 +136,8 @@ namespace Asobimo.Pachinko
 
         private void OnBtnBackClick()
         {
-            PanelGame.Inst.Back();
+            //PanelGame.Inst.Back();
+            PanelManager.Back();
         }
 
         private void ShowPullDownList()
@@ -171,6 +176,8 @@ namespace Asobimo.Pachinko
 
         private void OnBtnExchangeClick()
         {
+            PanelExchange.Inst.Open(null);
+            this.ShowPullDownList();
         }
     }
 }

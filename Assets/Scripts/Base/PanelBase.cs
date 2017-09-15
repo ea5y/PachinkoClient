@@ -12,10 +12,13 @@ namespace Asobimo.Pachinko
 {
     public interface IPanel
     {
-        void Open();
+        void Open(object data);
+        void Close();
+        void Back();
+        void Home();
     }
 
-    public abstract class PanelBase<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class PanelBase<T> : MonoBehaviour, IPanel where T : MonoBehaviour
     {
         public static T Inst;
         private object _objSync = new object();
@@ -38,6 +41,7 @@ namespace Asobimo.Pachinko
         public virtual void Home()
         {
             PanelManager.Home();
+            Player.Inst.State = PlayerStateType.None;
         }
 
         protected void Destroy()
@@ -90,6 +94,15 @@ namespace Asobimo.Pachinko
                     _stack.Pop();
                 }
             }
+        }
+
+        public static void Back()
+        {
+            var go = _stack.Pop();
+            go.SetActive(false);
+            _stack.Peek().SetActive(true);
+            var panel = go.GetComponent<IPanel>();
+            panel.Back();
         }
     }
 }

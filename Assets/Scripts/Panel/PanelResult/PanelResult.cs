@@ -14,7 +14,7 @@ namespace Asobimo.Pachinko
 
         public override void Back()
         {
-            throw new NotImplementedException();
+            this.Home();
         }
 
         public override void Close()

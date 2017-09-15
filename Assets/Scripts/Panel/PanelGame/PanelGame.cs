@@ -37,7 +37,6 @@ namespace Asobimo.Pachinko
         public override void Back()
         {
             _machineData.Pachinko.Exit();
-            this.Home();
         }
 
         public override void Close()
