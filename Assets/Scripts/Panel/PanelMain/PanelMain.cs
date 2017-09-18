@@ -106,11 +106,10 @@ namespace Asobimo.Pachinko
         private List<List<PachinkoData>> GetTestDatas(PachinkoStateType type)
         {
             var datas = new List<List<PachinkoData>>(5);
-            var temp = new List<PachinkoData>(2);
             int index = 0;
             for(int i = 0; i < 5; i++)
             {
-                temp.Clear();
+                var temp = new List<PachinkoData>(2);
                 for(int j = 0; j < 2; j++)
                 {
                     PachinkoData data = new PachinkoData();

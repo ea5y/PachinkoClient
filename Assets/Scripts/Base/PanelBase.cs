@@ -13,9 +13,20 @@ namespace Asobimo.Pachinko
     public interface IPanel
     {
         void Open(object data);
+        void OpenChild(object data);
         void Close();
         void Back();
         void Home();
+    }
+
+    public interface ITween
+    {
+        void Forward();
+        void Reverse();
+    }
+
+    public interface IPanelChild
+    {
     }
 
     public abstract class PanelBase<T> : MonoBehaviour, IPanel where T : MonoBehaviour
@@ -35,6 +46,11 @@ namespace Asobimo.Pachinko
         }
 
         public abstract void Open(object data);
+        public virtual void OpenChild(object data)
+        {
+            Debug.Log("===>Child");
+        }
+
         public abstract void Close();
         public abstract void Back();
 
@@ -59,6 +75,12 @@ namespace Asobimo.Pachinko
             HidePrev();
             panelGameObj.SetActive(true);
             _stack.Push(panelGameObj);
+        }
+
+        public static void OpenChild(GameObject panelChild)
+        {
+            panelChild.SetActive(true);
+            _stack.Push(panelChild);
         }
 
         private static void HideAll()
@@ -98,11 +120,22 @@ namespace Asobimo.Pachinko
 
         public static void Back()
         {
-            var go = _stack.Pop();
-            go.SetActive(false);
-            _stack.Peek().SetActive(true);
-            var panel = go.GetComponent<IPanel>();
-            panel.Back();
+            var cur = _stack.Pop();
+            cur.SetActive(false);
+
+            var pre = _stack.Peek();
+            pre.SetActive(true);
+
+            var panel = cur.GetComponent<IPanel>();
+            if(panel != null)
+            {
+                panel.Back();
+            }
+            else
+            {
+                if(pre.GetComponent<IPanel>() != null)
+                    Back();
+            }
         }
     }
 }

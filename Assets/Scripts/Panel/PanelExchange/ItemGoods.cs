@@ -14,7 +14,7 @@ namespace Asobimo.Pachinko
         public string IconName;
         public string GoodsName;
         public int BallsNum;
-        public string Status;
+        public int RemainNum;
     }
 
     public class ItemGoods : ScrollViewCellItem
@@ -37,6 +37,7 @@ namespace Asobimo.Pachinko
             this.SetBallsNum();
             this.SetStatus();
             this.RetistBtnEvent();
+            Debug.Log("Index" + _data.index);
         }
 
         private void RetistBtnEvent()
@@ -50,6 +51,7 @@ namespace Asobimo.Pachinko
         private void OnBtnEnterClick()
         {
             Debug.Log("===>Enter Exchange Detail");
+            PanelExchange.Inst.OpenToDetailView();
         }
 
         private void SetIcon()
@@ -69,7 +71,7 @@ namespace Asobimo.Pachinko
 
         private void SetStatus()
         {
-            this.Status.text = _data.Status;
+            this.Status.text = _data.RemainNum.ToString();
         }
     }
 }

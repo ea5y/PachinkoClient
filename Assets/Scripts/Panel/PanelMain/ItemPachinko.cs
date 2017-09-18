@@ -51,6 +51,7 @@ namespace Asobimo.Pachinko
             this.SetState(_data.StateType);
             this.SetDisplay();
             this.SetBtnEvent();
+            Debug.Log("ItemMain index: " + _data.index);
         }
 
         public void SetState(PachinkoStateType stateType)
