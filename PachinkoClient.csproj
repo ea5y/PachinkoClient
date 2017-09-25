@@ -67,6 +67,12 @@
     <Reference Include="UnityEditor.iOS.Extensions.Common">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
+    <Reference Include="LitJson">
+      <HintPath>Assets\Plugins\Json\LitJson.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>Assets\Plugins\Protobuf\protobuf-net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipItems.cs" />
@@ -210,17 +216,30 @@
     <Compile Include="Assets\Scripts\Base\Pachinko.cs" />
     <Compile Include="Assets\Scripts\Base\PanelBase.cs" />
     <Compile Include="Assets\Scripts\Base\Player.cs" />
+    <Compile Include="Assets\Scripts\Base\Singleton.cs" />
     <Compile Include="Assets\Scripts\Common\CustomControl.cs" />
     <Compile Include="Assets\Scripts\Common\ExtendFunc.cs" />
+    <Compile Include="Assets\Scripts\Common\URL.cs" />
+    <Compile Include="Assets\Scripts\Manager\ApplicationManager.cs" />
+    <Compile Include="Assets\Scripts\Manager\ScenesManager.cs" />
+    <Compile Include="Assets\Scripts\Net\CommunicationDataStruct.cs" />
+    <Compile Include="Assets\Scripts\Net\ErrorCode.cs" />
+    <Compile Include="Assets\Scripts\Net\Net.cs" />
+    <Compile Include="Assets\Scripts\Net\PackageFactory.cs" />
+    <Compile Include="Assets\Scripts\Net\SocketClient.cs" />
+    <Compile Include="Assets\Scripts\Net\ThreadDebug.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelExchange\ItemGoods.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelExchange\PanelExchange.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelExchange\ScrollItemExchange.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelGame\PanelGame.cs" />
+    <Compile Include="Assets\Scripts\Panel\PanelLogin\PanelLogin.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelMain\ItemPachinko.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelMain\PanelMain.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelMain\ScrollItemMain.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelResult\PanelResult.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelTopbar\PanelTopbar.cs" />
+    <Compile Include="Assets\Scripts\Tools\IOHelper.cs" />
+    <Compile Include="Assets\Scripts\Tools\ProtoBufUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />
