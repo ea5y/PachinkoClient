@@ -34,7 +34,8 @@ namespace Asobimo.Pachinko
                     Player.Inst.BallsNum = res.UserData.BallsNum;
                     PackageReqHead.SessionId = res.SessionId;
                     SocketClient.CreateHeartbeatTimer();
-                    ScenesManager.Inst.EnterScene(ScenesName.E_SceneGame_1);
+                //ScenesManager.Inst.EnterScene(ScenesName.E_SceneGame_1);
+                ScenesManager.Inst.EnterLoadingScene(SceneName.E_SceneGame_1);
                     });
         }
     }

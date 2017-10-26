@@ -11,6 +11,7 @@ namespace Easy.FrameUnity.Manager
     public class ApplicationManager : Singleton<ApplicationManager>
     {
         public GameObject Managers;
+        public GameObject Cameras;
 
         private void Awake()
         {
@@ -20,12 +21,13 @@ namespace Easy.FrameUnity.Manager
 
         private void Start()
         {
-            ScenesManager.Inst.EnterScene(ScenesName.C_SceneLogin);
+            ScenesManager.Inst.EnterLoadingScene(SceneName.E_SceneGame_1, LoadingType.Resource);
         }
 
         private void ApplicationEnter()
         {
             DontDestroyOnLoad(Managers);			
+            DontDestroyOnLoad(Cameras);			
         }
 
         private void ApplicationPause()

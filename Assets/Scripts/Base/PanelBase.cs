@@ -105,7 +105,7 @@ namespace Asobimo.Pachinko
             while(true)
             {
                 var panel = _stack.Peek();
-                if(panel.name == "PanelMain")
+                if(panel.name == "PanelMain(Clone)")
                 {
                     panel.SetActive(true);
                     break;
