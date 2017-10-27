@@ -1,2 +1,2 @@
-local socket = require 'xlua'
+local socket = require 'socket'
 print 'socket._VERSION'
