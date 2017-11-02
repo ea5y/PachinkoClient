@@ -58,7 +58,7 @@ namespace Easy.FrameUnity.Net
             }
         }
 
-        public static void InvokeAsync(Action action)
+        public static void InvokeAsyncForCS(Action action)
         {
             lock(_objAsync)
             {
@@ -66,6 +66,11 @@ namespace Easy.FrameUnity.Net
                         action();
                         });
             }
+        }
+
+        public static void InvokeAsyncForLUA(Action action)
+        {
+
         }
 
 #region BroadCast

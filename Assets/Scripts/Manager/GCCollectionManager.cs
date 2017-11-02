@@ -65,7 +65,7 @@ namespace Easy.FrameUnity.Manager
             while(!_isStop)
             {
                 Thread.Sleep(20000);
-                Net.Net.InvokeAsync(() => _collectionBundle.Invoke());
+                Net.Net.InvokeAsyncForCS(() => _collectionBundle.Invoke());
             }
         }
 
@@ -74,7 +74,7 @@ namespace Easy.FrameUnity.Manager
             while(!_isStop)
             {
                 Thread.Sleep(10000);
-                Net.Net.InvokeAsync(() => _collectionAsset.Invoke());
+                Net.Net.InvokeAsyncForCS(() => _collectionAsset.Invoke());
             }
         }
 

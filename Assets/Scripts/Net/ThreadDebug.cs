@@ -13,14 +13,14 @@ namespace Easy.FrameUnity.Net
     {
         public static void Log(string msg)
         {
-            Net.InvokeAsync(()=>{
+            Net.InvokeAsyncForCS(()=>{
                 Debug.Log(msg);
             });
         }
 
         public static void LogError(string msg)
         {
-            Net.InvokeAsync(()=>{
+            Net.InvokeAsyncForCS(()=>{
                 Debug.LogError(msg);
             });
         }

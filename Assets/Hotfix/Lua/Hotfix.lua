@@ -6,3 +6,4 @@
 --require 'PanelOther'
 local socket = require 'socket'
 print(socket._VERSION)
+require("Test")

@@ -1,0 +1,20 @@
+--pack
+--  wirtehead:MsgId, ActionId, Sid, Uid
+--  wirtedata:data,
+--  ToByte[]
+--
+--send:
+--  origin->
+--      CS.SendDic.Add(MsgId, Callback(string))
+--      CS.SocketClient.Send(byte[])
+--  hotfix->
+--      LUA.SendTable.Insert(MsgId, Callback(string))
+--      CS.SocketClient.Send(byte[])
+--
+--recv:check protoc version
+--  origin->CS.SocketClient.RecvQueueForCS.Enqueue(byte[])
+--  hotfix->cS.SocketClient.RecvQueueForLUA.Enqueue(byte[])
+--
+--upack
+--  origin
+--  hotfix

@@ -62,7 +62,7 @@ namespace Easy.FrameUnity.Net
                 callback = (res)=>
                 {
                     var obj = JsonMapper.ToObject<T>(res);
-                    Net.InvokeAsync(()=>{ callback(obj); });
+                    Net.InvokeAsyncForCS(()=>{ callback(obj); });
                 } };
 
             SocketClient.SendDic.Add(head.MsgId, head);

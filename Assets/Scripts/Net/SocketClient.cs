@@ -154,7 +154,7 @@ namespace Easy.FrameUnity.Net
                                 var cast = Net.CastDic[headCast.CastId];
 
                                 //@TODO Recieve BroadCast Event
-                                Net.InvokeAsync(() =>
+                                Net.InvokeAsyncForCS(() =>
                                 {
                                     //DebugBroadCast(data);
                                     cast(dataCastBytes);
@@ -165,12 +165,12 @@ namespace Easy.FrameUnity.Net
                     }
                     catch(Exception e)
                     {
-                        Net.InvokeAsync(() => { Debug.LogError(string.Format("Error: {0}", e.Message)); });
+                        Net.InvokeAsyncForCS(() => { Debug.LogError(string.Format("Error: {0}", e.Message)); });
                         break;
                     }
                 }
             }
-            Net.InvokeAsync(() => { Debug.Log("Exit Recieve thread!"); });
+            Net.InvokeAsyncForCS(() => { Debug.Log("Exit Recieve thread!"); });
         }
 
         private static void ReceiveTest()
