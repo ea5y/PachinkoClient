@@ -6,7 +6,8 @@
 
 using UnityEngine;
 using System;
-using Easy.FrameUnity.Net;
+//using Easy.FrameUnity.Net;
+using Easy.FrameUnity.ESNetwork;
 
 namespace Asobimo.Pachinko
 {
@@ -32,8 +33,11 @@ namespace Asobimo.Pachinko
         {
             Net.Login(Username.value, Password.value, (res)=>{
                     Player.Inst.BallsNum = res.UserData.BallsNum;
-                    PackageReqHead.SessionId = res.SessionId;
-                    SocketClient.CreateHeartbeatTimer();
+					NetPackage.Sid = res.SessionId;
+					Net.Heartbeat();
+
+                    //PackageReqHead.SessionId = res.SessionId;
+                    //SocketClient.CreateHeartbeatTimer();
                 //ScenesManager.Inst.EnterScene(ScenesName.E_SceneGame_1);
                 ScenesManager.Inst.EnterLoadingScene(SceneName.E_SceneGame_1);
                     });

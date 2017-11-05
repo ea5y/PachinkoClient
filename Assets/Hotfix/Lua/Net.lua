@@ -41,8 +41,7 @@
 --public class NetPackage
 --{
 --  string MsgId,
---  string ActionId,
---  string CastId,
+--  string ProtocId,
 --  string Sid,
 --  string Uid,
 --  string Type,
@@ -52,13 +51,31 @@
 --
 require("ExtendGlobal")
 Net = class()
-Net.protocActionType = {
+Net.protocActionId = {
     login = "1002"
 }
 
-Net.protocCastType = {
+Net.protocBrodcastId = {
 }
 
-Net.NetCallbacksLUA = {}
+function Net:send(data, protocId, callback)
+	--1.local dataJson = Serialize(data)
+	--2.local package = CS.NetPackage()
+	--3.package.MsgId = CS.Net.MsgId
+	--4.package.ProtocId = protocId
+	--5.package.Data = dataJson
+	--6.local bytes = CS.Net.Pack(package)
+	--local action = function(res)
+	--	local obj = UnSerialize(res)
+	--	callback(obj)
+	--end
+	--7.CS.Net.AddActionToResponseCallbacksLUA(package.MsgId, action)
+	--8.CS.SocketClient.Send(bytes)
+end
+
+function Net:login(username, password, callback)
+	--local data = new LoginDataReq
+	--self:send(data, self.actionId, callback)
+end
 
 

@@ -7,8 +7,9 @@
 using System;
 using UnityEngine;
 
-namespace Easy.FrameUnity.Net
+namespace Easy.FrameUnity.ESNetwork
 {
+	/*
     public class ThreadDebug
     {
         public static void Log(string msg)
@@ -25,4 +26,5 @@ namespace Easy.FrameUnity.Net
             });
         }
     }
+	*/
 }
