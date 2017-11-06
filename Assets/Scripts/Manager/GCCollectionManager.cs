@@ -5,6 +5,7 @@
 //================================
 using System;
 using System.Threading;
+using Easy.FrameUnity.ESThread;
 
 namespace Easy.FrameUnity.Manager
 {
@@ -65,7 +66,7 @@ namespace Easy.FrameUnity.Manager
             while(!_isStop)
             {
                 Thread.Sleep(20000);
-                Net.Net.InvokeAsyncForCS(() => _collectionBundle.Invoke());
+                MainThread.InvokeAsync(() => _collectionBundle.Invoke());
             }
         }
 
@@ -74,7 +75,7 @@ namespace Easy.FrameUnity.Manager
             while(!_isStop)
             {
                 Thread.Sleep(10000);
-                Net.Net.InvokeAsyncForCS(() => _collectionAsset.Invoke());
+                MainThread.InvokeAsync(() => _collectionAsset.Invoke());
             }
         }
 

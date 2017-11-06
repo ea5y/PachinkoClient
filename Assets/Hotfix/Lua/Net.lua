@@ -36,8 +36,6 @@
 --              Serialize From string to object
 --              Cast
 --
---
---
 --public class NetPackage
 --{
 --  string MsgId,
@@ -48,8 +46,10 @@
 --  string Version,
 --  string Data,
 --}
---
 require("ExtendGlobal")
+local rapidjson = require("rapidjson")
+local CSNet = CS.Easy.FrameUnity.ESNetwork
+
 Net = class()
 Net.protocActionId = {
     login = "1002"
@@ -59,23 +59,25 @@ Net.protocBrodcastId = {
 }
 
 function Net:send(data, protocId, callback)
-	--1.local dataJson = Serialize(data)
-	--2.local package = CS.NetPackage()
-	--3.package.MsgId = CS.Net.MsgId
-	--4.package.ProtocId = protocId
-	--5.package.Data = dataJson
-	--6.local bytes = CS.Net.Pack(package)
-	--local action = function(res)
-	--	local obj = UnSerialize(res)
-	--	callback(obj)
-	--end
-	--7.CS.Net.AddActionToResponseCallbacksLUA(package.MsgId, action)
-	--8.CS.SocketClient.Send(bytes)
+    local dataJson = rapidjson.encode(data)
+    local package = CSNet.NetPackage()
+    package.MsgId = CSNet.Net.MsgId
+    package.ProtocId = protocId
+    package.Data = dataJson
+    local bytes = CSNet.Net.Pack(package)
+
+    local action = function(res)
+        local obj = rapidjson.decode(res)
+        callback(obj)
+    end
+    CSNet.Net.AddActionToResponseCallbacksLUA(package.MsgId, action)
+
+    CSNet.SocketClient.Send(bytes)
 end
 
 function Net:login(username, password, callback)
-	--local data = new LoginDataReq
-	--self:send(data, self.actionId, callback)
+	local data = {Username = username, Password = password}
+    self:send(data, self.protocActionId.login, callback)
 end
 
 

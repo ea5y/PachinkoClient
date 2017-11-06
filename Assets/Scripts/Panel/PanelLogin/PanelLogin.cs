@@ -5,8 +5,6 @@
 //================================
 
 using UnityEngine;
-using System;
-//using Easy.FrameUnity.Net;
 using Easy.FrameUnity.ESNetwork;
 
 namespace Asobimo.Pachinko
@@ -35,11 +33,7 @@ namespace Asobimo.Pachinko
                     Player.Inst.BallsNum = res.UserData.BallsNum;
 					NetPackage.Sid = res.SessionId;
 					Net.Heartbeat();
-
-                    //PackageReqHead.SessionId = res.SessionId;
-                    //SocketClient.CreateHeartbeatTimer();
-                //ScenesManager.Inst.EnterScene(ScenesName.E_SceneGame_1);
-                ScenesManager.Inst.EnterLoadingScene(SceneName.E_SceneGame_1);
+                    ScenesManager.Inst.EnterLoadingScene(SceneName.E_SceneGame_1);
                     });
         }
     }

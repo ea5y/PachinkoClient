@@ -4,7 +4,5 @@
 --package.path = path .. '?.lua'
 --require 'PanelMain'
 --require 'PanelOther'
-local socket = require 'socket'
-print(socket._VERSION)
-require("Test")
+require("Net")
 require("PanelLogin")

@@ -15,7 +15,7 @@ namespace Easy.FrameUnity.ESThread
 		private static Queue<Action> _actionQueue = new Queue<Action>();
 		private static object _syncObj = new object();
 
-		private void OnUpdate()
+		private void Update()
 		{
 			if(_actionQueue.Count > 0)
 			{
@@ -30,7 +30,9 @@ namespace Easy.FrameUnity.ESThread
 				}
 				while(actionQueue.Count > 0)
 				{
-					actionQueue.Dequeue().Invoke();
+                    var action = actionQueue.Dequeue();
+                    //action.Invoke();
+                    action();
 				}
 			}
 		}

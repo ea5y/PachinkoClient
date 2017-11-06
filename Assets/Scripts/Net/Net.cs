@@ -64,22 +64,30 @@ namespace Easy.FrameUnity.ESNetwork
 		{
 			int statusCode;
 			var package = Unpack(bytes, out statusCode);
-			if(statusCode == 0)
-			{
-				if(package.Type == "response")
-				{
-					DealResponse(package);
-				}
-				else
-				{
-					DealBrodcast(package);
-				}
-			}
-			else
-			{
-				//Error
-			}
+            if (GetError(statusCode))
+                return;
+
+            if (package.Type == "response")
+            {
+                DealResponse(package);
+            }
+            else
+            {
+                DealBrodcast(package);
+            }
 		}
+
+        private static bool GetError(int code)
+        {
+            var msg = string.Format("RequestStatus: {0}", ErrorCode.Dic[code]);
+            MainThread.Log(msg);
+            if (code == 0)
+                return false;
+            else
+            {
+                return true;
+            }
+        }
 
 		private static void DealResponse(NetPackage package)
 		{
@@ -105,7 +113,7 @@ namespace Easy.FrameUnity.ESNetwork
 			}
 		}
 
-		private static byte[] Pack(NetPackage package)
+		public static byte[] Pack(NetPackage package)
 		{
 			var packageStr = string.Format("MsgId={0}&ActionId={1}&Sid={2}&Uid={3}&Data={4}",
 					package.MsgId, package.ProtocId, NetPackage.Sid, package.Uid, package.Data);
@@ -257,6 +265,11 @@ namespace Easy.FrameUnity.ESNetwork
 		{
 			_responseCallbacksCS.Add(msgId, action);
 		}
+
+        public static void AddActionToResponseCallbacksLUA(string msgId, Action<string> action)
+        {
+            _responseCallbacksLUA.Add(msgId, action);
+        }
 
 		private void Update()
 		{

@@ -244,13 +244,9 @@
     <Compile Include="Assets\Scripts\Net\CommunicationDataStruct.cs" />
     <Compile Include="Assets\Scripts\Net\ErrorCode.cs" />
     <Compile Include="Assets\Scripts\Net\Net.cs" />
-    <Compile Include="Assets\Scripts\Net\NetOld.cs" />
     <Compile Include="Assets\Scripts\Net\NetPackage.cs" />
-    <Compile Include="Assets\Scripts\Net\PackageFactory.cs" />
     <Compile Include="Assets\Scripts\Net\ProtocStruct.cs" />
     <Compile Include="Assets\Scripts\Net\SocketClient.cs" />
-    <Compile Include="Assets\Scripts\Net\SocketClientNew.cs" />
-    <Compile Include="Assets\Scripts\Net\ThreadDebug.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelExchange\ItemGoods.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelExchange\PanelExchange.cs" />
     <Compile Include="Assets\Scripts\Panel\PanelExchange\ScrollItemExchange.cs" />
@@ -268,6 +264,7 @@
     <Compile Include="Assets\Scripts\Util\IOHelperUtil.cs" />
     <Compile Include="Assets\Scripts\Util\ObjectPoolUtil.cs" />
     <Compile Include="Assets\Scripts\Util\ProtoBufUtil.cs" />
+    <Compile Include="Assets\Scripts\XLuaExtension\BuildInInit.cs" />
     <Compile Include="Assets\XLua\Examples\01_Helloworld\Helloworld.cs" />
     <Compile Include="Assets\XLua\Examples\02_U3DScripting\LuaBehaviour.cs" />
     <Compile Include="Assets\XLua\Examples\04_LuaObjectOrented\InvokeLua.cs" />

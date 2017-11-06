@@ -5,6 +5,8 @@
 --================================
 
 require("ExtendGlobal")
+local CSNet = CS.Easy.FrameUnity.ESNetwork
+
 PanelLogin = class()
 
 function PanelLogin:ctor()
@@ -26,4 +28,9 @@ end
 
 function PanelLogin:onBtnLoginClick()
     print("Login")
+    local callback = function(res)
+        print("Login callback")
+        CS.ScenesManager.Inst:EnterLoadingScene(CS.SceneName.E_SceneGame_1)
+    end
+    _G.Net:login("Test", "565656", callback)
 end

@@ -14,7 +14,7 @@ public static class LuaConfig
     public static List<Type> LuaCallCsWhiteList = new List<Type>()
     {
         typeof(EventDelegate),
-        //typeof(Easy.FrameUnity.Panel.PanelMain)
+        typeof(Easy.FrameUnity.ESNetwork.Net)
     };
 }
 

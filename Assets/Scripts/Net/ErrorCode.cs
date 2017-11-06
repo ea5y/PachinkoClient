@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Easy.FrameUnity.Net
+namespace Easy.FrameUnity.ESNetwork
 {
     public class ErrorCode
     {
