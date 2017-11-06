@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using LitJson;
+using Easy.FrameUnity.ESThread;
+
 namespace Easy.FrameUnity.ESNetwork
 {
 	public class NetPackage
@@ -256,7 +258,7 @@ namespace Easy.FrameUnity.ESNetwork
 			_responseCallbacksCS.Add(msgId, action);
 		}
 
-		private void OnUpdate()
+		private void Update()
 		{
 			DispatchResponseCS();
 			DispatchResponseLUA();
@@ -266,7 +268,10 @@ namespace Easy.FrameUnity.ESNetwork
 
 		private void OnDestroy()
 		{
+            if (_heartbeatTimer != null)
+                _heartbeatTimer.Dispose();
 			SocketClient.CloseConnection();
+            Debug.Log("Dipose Socket!");
 		}
 
 		private static void Send<T>(object data, int protocId, Action<T> callback)
@@ -300,13 +305,13 @@ namespace Easy.FrameUnity.ESNetwork
 			//10.SocketClient.Send(bytes);
 		}
 
-		private static void Send(object data, int protocId)
+		private static void Send(object data, int protocId, int msgId)
 		{
 			string dataJson = string.Empty;
 			if(data != null)
 				dataJson = JsonMapper.ToJson(data);
 			var package = new NetPackage();
-			package.MsgId = MsgId.ToString();
+			package.MsgId = msgId.ToString();
 			package.ProtocId = protocId.ToString();
 			package.Data = dataJson;
 			var bytes = Pack(package);
@@ -314,20 +319,19 @@ namespace Easy.FrameUnity.ESNetwork
 			SocketClient.Send(bytes);
 		}
 
+        private static Timer _heartbeatTimer;
 		public static void Heartbeat()
 		{
-			var thread = new Thread(new ThreadStart(ThreadHeartbeat));
-			thread.Start();
+            if(_heartbeatTimer == null)
+            {
+                _heartbeatTimer = new Timer(SendHeartbeat, null, 10000, 10000);
+            }
 		}
 
-		private static void ThreadHeartbeat()
-		{
-			while(SocketClient.Connected)
-			{
-				Thread.Sleep(10000);
-				Send(null, (int)ActionID.Heartbeat);
-			}
-		}
+        private static void SendHeartbeat(object state)
+        {
+            Send(null, (int)ActionID.Heartbeat, 1);
+        }
 
 		public static void Login(string username, string password, Action<LoginDataRes> callback)
 		{
@@ -335,7 +339,6 @@ namespace Easy.FrameUnity.ESNetwork
 			data.Username = username;
 			data.Password = password;
 			Send(data, (int)ActionID.Login, callback);
-			//2.Send(data, ActionID.Login, ()=>{callback()});
 		}
 	}
 }

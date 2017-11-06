@@ -14,12 +14,11 @@ namespace Easy.FrameUnity.ESNetwork
 {
 	public class SocketClient
 	{
-		private static Socket _socket;
-		public static bool Connected;
+		public static Socket Socket;
 
 		private static void CheckConnection()
 		{
-			if(_socket == null || !_socket.Connected)
+			if(Socket == null || !Socket.Connected)
 			{
 				OpenConnection();
 				CreateReceiveThread();
@@ -28,12 +27,11 @@ namespace Easy.FrameUnity.ESNetwork
 
 		private static bool OpenConnection()
 		{
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
 				Debug.Log("Socket connect...");
-                _socket.Connect(URL.GAME_SERVER_HOST, URL.GAME_SERVER_PORT);
-				Connected = true;
+                Socket.Connect(URL.GAME_SERVER_HOST, URL.GAME_SERVER_PORT);
 				return true;
             }
             catch (SocketException se)
@@ -54,16 +52,23 @@ namespace Easy.FrameUnity.ESNetwork
 
 		private static void Receive()
 		{
-			while(_socket != null)
+			while(Socket != null)
 			{
-				if(_socket.Poll(5, SelectMode.SelectRead))
+				if(Socket.Poll(5, SelectMode.SelectRead))
 				{
-					var bytes = GetBytes();
-					Net.TransformBytes(bytes);
+                    try
+                    {
+                        var bytes = GetBytes();
+                        Net.TransformBytes(bytes);
+                    }
+                    catch(Exception e)
+                    {
+                        MainThread.Log("Error: " + e.Message);
+                        break;
+                    }
 				}
 			}
-
-			MainThread.LogError("Socket Receive thread over!");
+			//MainThread.LogError("Socket Receive thread over!");
 		}
 
 		private static byte[] GetBytes()
@@ -89,7 +94,7 @@ namespace Easy.FrameUnity.ESNetwork
             {
                 do
                 {
-                    int rev = _socket.Receive(data, startIndex, length - recnum, SocketFlags.None);
+                    int rev = Socket.Receive(data, startIndex, length - recnum, SocketFlags.None);
                     recnum += rev;
                     startIndex += rev;
                 } while (recnum != length);
@@ -105,7 +110,10 @@ namespace Easy.FrameUnity.ESNetwork
 
 		public static void CloseConnection()
 		{
-			Connected = false;
+            if (Socket == null)
+                return;
+            Socket.Close();
+            Socket = null;
 		}
 
         //5.send
@@ -122,10 +130,10 @@ namespace Easy.FrameUnity.ESNetwork
                 return;
             }
 
-            if (_socket == null)
+            if (Socket == null)
                 return;
             //Debug.Log("===>Send");
-            _socket.Send(data);
+            Socket.Send(data);
         }
 	}
 

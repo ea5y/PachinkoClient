@@ -83,6 +83,8 @@ namespace Easy.FrameUnity.Manager
                     _luaTableDic.Add("PanelOther", table);
             });
             */
+            var table = this.LuaEnv.Global.Get<ILuaTable>("PanelLogin");
+            _luaTableDic.Add("PanelLogin", table);
         }
 
         public ILuaTable GetLuaTable(string key)

@@ -143,6 +143,7 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\AssetBundle.cs" />
     <Compile Include="Assets\Editor\GameConfig.cs" />
+    <Compile Include="Assets\Editor\LuaConfig.cs" />
     <Compile Include="Assets\Editor\MenuEditor.cs" />
     <Compile Include="Assets\Editor\ScriptableObject.cs" />
     <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Editor\InvDatabaseInspector.cs" />

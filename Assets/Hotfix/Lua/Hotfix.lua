@@ -7,3 +7,4 @@
 local socket = require 'socket'
 print(socket._VERSION)
 require("Test")
+require("PanelLogin")
