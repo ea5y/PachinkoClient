@@ -6,6 +6,7 @@
 
 using UnityEngine;
 using Easy.FrameUnity.ESNetwork;
+using Easy.FrameUnity.Util;
 
 namespace Asobimo.Pachinko
 {
@@ -15,9 +16,24 @@ namespace Asobimo.Pachinko
         public UIInput Password;
         public UIButton BtnLogin;
 
+        private RegisterDataReq _data;
+
         private void Awake()
         {
             this.RegisterBtnEvent();
+            this.LoadLoginConfig();
+            this.Init();
+        }
+
+        private void LoadLoginConfig()
+        {
+            _data = IOHelperUtil.ReadFromJson<RegisterDataReq>(URL.DEBUG_CONFIG);
+        }
+
+        private void Init()
+        {
+            this.Username.value = _data.Username;
+            this.Password.value = _data.Password;
         }
 
         public void RegisterBtnEvent()

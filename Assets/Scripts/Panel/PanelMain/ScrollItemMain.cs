@@ -25,8 +25,16 @@ namespace Asobimo.Pachinko
                 _items = gameObject.GetComponentsInChildren<ItemPachinko>();
             }
 
+            if (index == 2)
+                Debug.Log("Debug");
+
             for(int i = 0; i < _items.Length; i++)
             {
+                if(i > _datas.Count - 1)
+                {
+                    _items[i].gameObject.SetActive(false);
+                    continue;
+                }
                 _items[i].FillItem(_datas[i]);
             }
         }

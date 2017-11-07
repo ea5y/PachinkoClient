@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System;
 using CustomControl;
+using Easy.FrameUnity.ESNetwork;
 
 namespace Asobimo.Pachinko
 {
@@ -67,6 +67,75 @@ namespace Asobimo.Pachinko
             this.Init();
             this.RegisterBtnEvent();
             PanelManager.Open(this.gameObject);
+            Net.GetPachinkos(OnGetPachinkos);
+        }
+
+        private void OnGetPachinkos(GetPachinkosRes res)
+        {
+            var datas = this.PackAll(res.PachinkoDataSet);
+            this.CreateScrollAll(datas);
+        }
+
+        private List<List<PachinkoData>> GetTestDatas(PachinkoStateType type)
+        {
+            var datas = new List<List<PachinkoData>>(5);
+            int index = 0;
+            for(int i = 0; i < 5; i++)
+            {
+                var temp = new List<PachinkoData>(2);
+                for(int j = 0; j < 2; j++)
+                {
+                    PachinkoData data = new PachinkoData();
+                    data.StateType = type;
+                    data.index = index;
+                    temp.Add(data);
+                    index++;
+                }
+                datas.Add(temp);
+            }
+            return datas;
+        }
+
+        private List<List<PachinkoData>> PackAll(PachinkoDataSet dataSet)
+        {
+            var datas = new List<List<PachinkoData>>();
+            var line = Math.Ceiling((float)dataSet.PachinkoDataSetList.Count / 2);
+            Debug.Log("Line: " + line);
+            int index = 0;
+            for(int i = 0; i < line; i++)
+            {
+                var temp = new List<PachinkoData>();
+                for(int j = 0; j < 2; j++)
+                {
+                    if (index > dataSet.PachinkoDataSetList.Count - 1)
+                        continue;
+                    var resData = dataSet.PachinkoDataSetList[0];
+                    var data = new PachinkoData();
+                    data.index = index;
+                    data.StateType = resData.StateType;
+                    data.Times = resData.Times;
+                    data.Sum = resData.Sum;
+                    data.PbChange = resData.PbChange;
+                    data.Award = resData.Award;
+                    temp.Add(data);
+                    index++;
+                }
+                datas.Add(temp);
+            }
+            return datas;
+        }
+
+        private void CreateScrollAll(List<List<PachinkoData>> datas)
+        {
+            if(_scrollViewAll == null)
+            {
+                _scrollViewAll = new ScrollView<ScrollItemMain>(TabPageAll.Grid, TabPageAll.ItemPrefab);
+            }
+            _scrollViewAll.CreateWeight(datas);
+        }
+
+        private void CreateScrollRecommend()
+        {
         }
 
         private void Init()
@@ -93,7 +162,7 @@ namespace Asobimo.Pachinko
             switch(type)
             {
                 case PageType.TabPageAll:
-                    this.SetPageAll();
+                    //this.SetPageAll();
                     _pages.SwitchTo(this.TabPageAll, this.BtnAll);
                     break;
                 case PageType.TabPageRecommend:
@@ -101,26 +170,6 @@ namespace Asobimo.Pachinko
                     _pages.SwitchTo(this.TabPageRecommend, this.BtnRecommend);
                     break;
             }
-        }
-
-        private List<List<PachinkoData>> GetTestDatas(PachinkoStateType type)
-        {
-            var datas = new List<List<PachinkoData>>(5);
-            int index = 0;
-            for(int i = 0; i < 5; i++)
-            {
-                var temp = new List<PachinkoData>(2);
-                for(int j = 0; j < 2; j++)
-                {
-                    PachinkoData data = new PachinkoData();
-                    data.StateType = type;
-                    data.index = index;
-                    temp.Add(data);
-                    index++;
-                }
-                datas.Add(temp);
-            }
-            return datas;
         }
 
         private void SetPageAll()

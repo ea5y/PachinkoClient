@@ -43,37 +43,19 @@ public class ScenesManager : Singleton<ScenesManager>
                 break;
             case SceneName.B_SceneLoading:
                 op = SceneManager.LoadSceneAsync("B_SceneLoading");
+                callback = OnEnterSceneLoading;
                 break;
             case SceneName.C_SceneLogin:
                 op = SceneManager.LoadSceneAsync("C_SceneLogin");
+                callback = OnEnterSceneLogin;
                 break;
             case SceneName.D_SceneGameInit:
                 break;
             case SceneName.E_SceneGame_1:
                 op = SceneManager.LoadSceneAsync("E_SceneGame_1");
-                callback = () => {
-                    //EasyTouchPlugin.Inst.Enable(true);
-                    //Net.SpwanPlayer();
-                    AssetPoolManager.Inst.FindAsset<AssetScriptableObject, SObjPanelNames>("parameter", "PanelNames", (obj)=>{
-                            foreach(var panelName in obj.PanelNameList)
-                            {
-                                Debug.Log("PanelName: " + panelName);
-                                UIManager.Inst.InstantiatePanel(panelName);
-                            }
-                            });
-                };
+                callback = OnEnterSceneGame1;
                 break;
             case SceneName.F_SceneGame_2:
-                op = SceneManager.LoadSceneAsync("F_SceneGame_2");
-                callback = () => {
-                    AssetPoolManager.Inst.FindAsset<AssetScriptableObject, SObjPanelNames>("parameter", "PanelNames", (obj)=>{
-                            foreach(var panelName in obj.PanelNameList)
-                            {
-                                Debug.Log("PanelName: " + panelName);
-                                UIManager.Inst.InstantiatePanel(panelName);
-                            }
-                            });
-                };
                 break;
         }
         StartCoroutine(Loading(op, callback, ui));
@@ -90,5 +72,42 @@ public class ScenesManager : Singleton<ScenesManager>
         while (!op.isDone)
             yield return null;
         callback.Invoke();
+    }
+
+    private void OnEnterSceneEnter()
+    {
+
+    }
+
+    private void OnEnterSceneLoading()
+    {
+
+    }
+
+    private void OnEnterSceneLogin()
+    {
+        UIManager.Inst.InstantiatePanel("PanelLogin");
+    }
+
+    private void OnEnterSceneGameInit()
+    {
+
+    }
+
+    private void OnEnterSceneGame1()
+    {
+        AssetPoolManager.Inst.FindAsset<AssetScriptableObject, SObjPanelNames>("parameter", "PanelNames", (obj) =>
+        {
+            foreach (var panelName in obj.PanelNameList)
+            {
+                Debug.Log("PanelName: " + panelName);
+                UIManager.Inst.InstantiatePanel(panelName);
+            }
+        });
+    }
+
+    private void OnEnterSceneGame2()
+    {
+
     }
 }

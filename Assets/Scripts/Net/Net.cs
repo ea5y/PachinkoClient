@@ -11,6 +11,7 @@ using System.Threading;
 using UnityEngine;
 using LitJson;
 using Easy.FrameUnity.ESThread;
+using Easy.FrameUnity.Util;
 
 namespace Easy.FrameUnity.ESNetwork
 {
@@ -32,6 +33,8 @@ namespace Easy.FrameUnity.ESNetwork
 			Heartbeat = 1,
 			Register = 1001,
 			Login = 1002,
+            GetPachinkos = 1005,
+            GetGoods = 1006
 		}
 
 		public enum BrodcastID
@@ -352,6 +355,12 @@ namespace Easy.FrameUnity.ESNetwork
 			data.Username = username;
 			data.Password = password;
 			Send(data, (int)ActionID.Login, callback);
+            IOHelperUtil.SaveToJson<RegisterDataReq>(data, URL.DEBUG_CONFIG);
 		}
+
+        public static void GetPachinkos(Action<GetPachinkosRes> callback)
+        {
+            Send(null, (int)ActionID.GetPachinkos, callback);
+        }
 	}
 }

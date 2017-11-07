@@ -42,4 +42,6 @@ public class URL
 #endif
 
     public static readonly string HOTFIX_MAIN_URL = LUA_LOCAL_URL + "Hotfix.lua";
+
+    public static readonly string DEBUG_CONFIG = "Assets/DebugConfig/";
 }
