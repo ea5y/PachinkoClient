@@ -33,6 +33,8 @@ namespace Easy.FrameUnity.ESNetwork
 			Heartbeat = 1,
 			Register = 1001,
 			Login = 1002,
+            DealSwitch = 1003,
+            DealLevel = 1004,
             GetPachinkos = 1005,
             GetGoods = 1006
 		}
@@ -308,17 +310,6 @@ namespace Easy.FrameUnity.ESNetwork
 						});
 
 			SocketClient.Send(bytes);
-			
-			//2.var dataJson = serialize(data);
-			//2.var package = new NetPackage();
-			//3.package.MsgId = Net.MsgId;
-			//4.package.ProtocId = ActionID.Login;
-			//5.package.Sid = "";
-			//6.package.Uid = "";
-			//7.package.Data = dataJson;
-			//8.var bytes = Net.Pack(package);
-			//9.responseCallbacksCS.Add(package.MsgId, callback);
-			//10.SocketClient.Send(bytes);
 		}
 
 		private static void Send(object data, int protocId, int msgId)
@@ -349,18 +340,42 @@ namespace Easy.FrameUnity.ESNetwork
             Send(null, (int)ActionID.Heartbeat, 1);
         }
 
-		public static void Login(string username, string password, Action<LoginDataRes> callback)
+		public static void Login(RegisterDataReq data, string password, Action<LoginDataRes> callback)
 		{
-			var data = new RegisterDataReq();
-			data.Username = username;
-			data.Password = password;
 			Send(data, (int)ActionID.Login, callback);
-            IOHelperUtil.SaveToJson<RegisterDataReq>(data, URL.DEBUG_CONFIG);
 		}
 
         public static void GetPachinkos(Action<GetPachinkosRes> callback)
         {
             Send(null, (int)ActionID.GetPachinkos, callback);
+        }
+
+        public static void GetGoods()
+        {
+
+        }
+
+        public static void StartPlayGame(int pachinkoId)
+        {
+            var data = new DealSwitchReq();
+            data.PachinkoId = pachinkoId;
+            data.SwitchType = "on";
+            Action<DealSwitchRes> callback = (res) => { };
+            Send(data, (int)ActionID.DealSwitch, callback);
+        }
+
+        public static void EndPlayGame(int pachinkoId)
+        {
+            var data = new DealSwitchReq();
+            data.PachinkoId = pachinkoId;
+            data.SwitchType = "off";
+            Action<DealSwitchRes> callback = (res) => { };
+            Send(data, (int)ActionID.DealSwitch, callback);
+        }
+
+        public static void ChangeLevel(int pachinkoId, string level)
+        {
+
         }
 	}
 }

@@ -29,7 +29,7 @@ namespace Easy.FrameUnity.ESNetwork
             Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-				Debug.Log("Socket connect...");
+				Debug.Log("Socket connect: " + URL.GAME_SERVER_HOST + ":" + URL.GAME_SERVER_PORT);
                 Socket.Connect(URL.GAME_SERVER_HOST, URL.GAME_SERVER_PORT);
 				return true;
             }

@@ -72,8 +72,15 @@ namespace Asobimo.Pachinko
 
         private void OnGetPachinkos(GetPachinkosRes res)
         {
-            var datas = this.PackAll(res.PachinkoDataSet);
-            this.CreateScrollAll(datas);
+            List<Easy.FrameUnity.ESNetwork.PachinkoData> all;
+            List<Easy.FrameUnity.ESNetwork.PachinkoData> recommend;
+            this.SplitPachinkos(res.PachinkoDataSet.PachinkoDataSetList, out all, out recommend);
+
+            var datasAll = this.Pack(all);
+            var datasRecommend = this.Pack(recommend);
+            //var datas = this.PackAll(res.PachinkoDataSet);
+            this.CreateScrollAll(datasAll);
+            this.CreateScrollRecommend(datasRecommend);
         }
 
         private List<List<PachinkoData>> GetTestDatas(PachinkoStateType type)
@@ -94,6 +101,25 @@ namespace Asobimo.Pachinko
                 datas.Add(temp);
             }
             return datas;
+        }
+
+        private void SplitPachinkos(List<Easy.FrameUnity.ESNetwork.PachinkoData> dataList, 
+            out List<Easy.FrameUnity.ESNetwork.PachinkoData> all, out List<Easy.FrameUnity.ESNetwork.PachinkoData> recommend)
+        {
+            all = new List<Easy.FrameUnity.ESNetwork.PachinkoData>();
+            recommend = new List<Easy.FrameUnity.ESNetwork.PachinkoData>();
+
+            foreach(var p in dataList)
+            {
+                if(p.Type == PachinkoType.Recommend)
+                {
+                    recommend.Add(p);
+                }
+                else
+                {
+                    all.Add(p);
+                }
+            }
         }
 
         private List<List<PachinkoData>> PackAll(PachinkoDataSet dataSet)
@@ -125,6 +151,35 @@ namespace Asobimo.Pachinko
             return datas;
         }
 
+        private List<List<PachinkoData>> Pack(List<Easy.FrameUnity.ESNetwork.PachinkoData> dataList)
+        {
+            var datas = new List<List<PachinkoData>>();
+            var line = Math.Ceiling((float)dataList.Count / 2);
+            Debug.Log("Line: " + line);
+            int index = 0;
+            for(int i = 0; i < line; i++)
+            {
+                var temp = new List<PachinkoData>();
+                for(int j = 0; j < 2; j++)
+                {
+                    if (index > dataList.Count - 1)
+                        continue;
+                    var resData = dataList[0];
+                    var data = new PachinkoData();
+                    data.index = index;
+                    data.StateType = resData.StateType;
+                    data.Times = resData.Times;
+                    data.Sum = resData.Sum;
+                    data.PbChange = resData.PbChange;
+                    data.Award = resData.Award;
+                    temp.Add(data);
+                    index++;
+                }
+                datas.Add(temp);
+            }
+            return datas;
+        }
+
         private void CreateScrollAll(List<List<PachinkoData>> datas)
         {
             if(_scrollViewAll == null)
@@ -134,8 +189,13 @@ namespace Asobimo.Pachinko
             _scrollViewAll.CreateWeight(datas);
         }
 
-        private void CreateScrollRecommend()
+        private void CreateScrollRecommend(List<List<PachinkoData>> datas)
         {
+            if(_scrollViewRecommend == null)
+            {
+                _scrollViewRecommend = new ScrollView<ScrollViewItem>(TabPageRecommend.Grid, TabPageRecommend.ItemPrefab);
+            }
+            _scrollViewRecommend.CreateWeight(datas);
         }
 
         private void Init()
@@ -166,7 +226,7 @@ namespace Asobimo.Pachinko
                     _pages.SwitchTo(this.TabPageAll, this.BtnAll);
                     break;
                 case PageType.TabPageRecommend:
-                    this.SetPageRecommend();
+                    //this.SetPageRecommend();
                     _pages.SwitchTo(this.TabPageRecommend, this.BtnRecommend);
                     break;
             }

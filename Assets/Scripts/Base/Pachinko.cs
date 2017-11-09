@@ -16,6 +16,12 @@ namespace Asobimo.Pachinko
         Reset,
         LostConnection
     }
+
+    public enum PachinkoType
+    {
+        None,
+        Recommend
+    }
     
     public abstract class State
     {

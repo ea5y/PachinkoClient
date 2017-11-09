@@ -8,14 +8,19 @@ using Asobimo.Pachinko;
 using System.Collections.Generic;
 namespace Easy.FrameUnity.ESNetwork
 {
-	public class RegisterDataReq
+    #region Req && Res
+
+    #region Register && Login
+    public class RegisterDataReq
 	{
 		public string Username;
 		public string Password;
+        public string Sid;
 	}
 
 	public class RegisterDataRes
 	{
+        public int ReturnCode;
 	}
 
 	public class LoginDataReq
@@ -24,6 +29,7 @@ namespace Easy.FrameUnity.ESNetwork
 
 	public class LoginDataRes
 	{
+        public int ReturnCode;
 		public string SessionId;
 		public UserData UserData;
 	}
@@ -34,9 +40,12 @@ namespace Easy.FrameUnity.ESNetwork
 		public string NickName;
 		public int BallsNum;
 	}
+    #endregion
 
+    #region GetPachinko
     public class GetPachinkosRes
     {
+        public int ReturnCode;
         public PachinkoDataSet PachinkoDataSet;
     }
 
@@ -53,5 +62,30 @@ namespace Easy.FrameUnity.ESNetwork
         public int Sum;
         public int PbChange;
         public int Award;
+        public PachinkoType Type;
     }
+    #endregion
+
+    #region DealSwitch
+    public class DealSwitchReq
+    {
+        public int PachinkoId;
+        public string SwitchType;
+    }
+
+    public class DealSwitchRes
+    {
+        public int ReturnCode;
+    }
+    #endregion
+
+    #endregion
+
+    #region Cast
+    public class PachinkoStateDataCast
+    {
+        public int Id;
+        public PachinkoStateType StateType;
+    }
+    #endregion
 }

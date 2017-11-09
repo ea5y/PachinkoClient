@@ -28,6 +28,7 @@ namespace Asobimo.Pachinko
         private void LoadLoginConfig()
         {
             _data = IOHelperUtil.ReadFromJson<RegisterDataReq>(URL.DEBUG_CONFIG);
+            NetPackage.Sid = _data.Sid;
         }
 
         private void Init()
@@ -45,9 +46,12 @@ namespace Asobimo.Pachinko
 
         public void OnBtnLoginClick()
         {
-            Net.Login(Username.value, Password.value, (res)=>{
+            Net.Login(_data, Password.value, (res)=>{
                     Player.Inst.BallsNum = res.UserData.BallsNum;
 					NetPackage.Sid = res.SessionId;
+                    _data.Sid = res.SessionId;
+                    IOHelperUtil.SaveToJson<RegisterDataReq>(_data, URL.DEBUG_CONFIG);
+
 					Net.Heartbeat();
                     ScenesManager.Inst.EnterLoadingScene(SceneName.E_SceneGame_1);
                     });
