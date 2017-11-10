@@ -17,6 +17,7 @@ namespace Asobimo.Pachinko
 
     public class PachinkoData : ScrollViewCellItemData
     {
+        public int Id;
         public PachinkoStateType StateType;
 
         public string IconName;
@@ -24,6 +25,7 @@ namespace Asobimo.Pachinko
         public int Sum;
         public int PbChange;
         public int Award;
+        public PachinkoType Type;
     }
 
     public class ItemPachinko : ScrollViewCellItem

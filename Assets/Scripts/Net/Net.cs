@@ -252,6 +252,7 @@ namespace Easy.FrameUnity.ESNetwork
 		{
 			if(_recvBrodcastQueueCS.Count > 0)
 			{
+                Debug.LogError("Debug");
 				var dispatchQueue = GetDispatchQueue(_recvBrodcastQueueCS, _syncBrodQueueCS);
 				Dispatch(dispatchQueue, _brodcastActionCS);
 			}
@@ -292,7 +293,9 @@ namespace Easy.FrameUnity.ESNetwork
             Debug.Log("Dipose Socket!");
 		}
 
-		private static void Send<T>(object data, int protocId, Action<T> callback)
+        #region Request
+
+        private static void Send<T>(object data, int protocId, Action<T> callback)
 		{
 			string dataJson = string.Empty;
 			if(data != null)
@@ -377,5 +380,17 @@ namespace Easy.FrameUnity.ESNetwork
         {
 
         }
-	}
+        #endregion
+
+        #region Bordcast
+        private void OnChangePachinkoState(string res)
+        {
+            var data = JsonMapper.ToObject<PachinkoStateDataCast>(res);
+            Asobimo.Pachinko.PanelMain.Inst.ChangePachinkoState(data);
+            //Find pachinko
+            //Change pachinko data
+            //Change pachinko item
+        }
+        #endregion
+    }
 }

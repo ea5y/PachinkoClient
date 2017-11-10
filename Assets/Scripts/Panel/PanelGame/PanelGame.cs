@@ -4,6 +4,7 @@
 //===Date: 2017-09-11 09:28
 //================================
 
+using Easy.FrameUnity.ESNetwork;
 using System;
 using UnityEngine;
 
@@ -193,6 +194,7 @@ namespace Asobimo.Pachinko
 
         private void StartPlayGame()
         {
+            Net.StartPlayGame(_machineData.Data.Id);
             _machineData.Pachinko.Start();
         }
         

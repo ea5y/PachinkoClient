@@ -53,7 +53,7 @@ namespace Easy.FrameUnity.ESNetwork
 		{
 			while(Socket != null)
 			{
-				if(Socket.Poll(5, SelectMode.SelectRead))
+				if(Socket.Poll(-1, SelectMode.SelectRead))
 				{
                     try
                     {

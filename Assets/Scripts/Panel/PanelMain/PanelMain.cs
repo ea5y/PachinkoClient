@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using CustomControl;
 using Easy.FrameUnity.ESNetwork;
+using LitJson;
 
 namespace Asobimo.Pachinko
 {
@@ -78,29 +79,8 @@ namespace Asobimo.Pachinko
 
             var datasAll = this.Pack(all);
             var datasRecommend = this.Pack(recommend);
-            //var datas = this.PackAll(res.PachinkoDataSet);
             this.CreateScrollAll(datasAll);
             this.CreateScrollRecommend(datasRecommend);
-        }
-
-        private List<List<PachinkoData>> GetTestDatas(PachinkoStateType type)
-        {
-            var datas = new List<List<PachinkoData>>(5);
-            int index = 0;
-            for(int i = 0; i < 5; i++)
-            {
-                var temp = new List<PachinkoData>(2);
-                for(int j = 0; j < 2; j++)
-                {
-                    PachinkoData data = new PachinkoData();
-                    data.StateType = type;
-                    data.index = index;
-                    temp.Add(data);
-                    index++;
-                }
-                datas.Add(temp);
-            }
-            return datas;
         }
 
         private void SplitPachinkos(List<Easy.FrameUnity.ESNetwork.PachinkoData> dataList, 
@@ -122,38 +102,10 @@ namespace Asobimo.Pachinko
             }
         }
 
-        private List<List<PachinkoData>> PackAll(PachinkoDataSet dataSet)
-        {
-            var datas = new List<List<PachinkoData>>();
-            var line = Math.Ceiling((float)dataSet.PachinkoDataSetList.Count / 2);
-            Debug.Log("Line: " + line);
-            int index = 0;
-            for(int i = 0; i < line; i++)
-            {
-                var temp = new List<PachinkoData>();
-                for(int j = 0; j < 2; j++)
-                {
-                    if (index > dataSet.PachinkoDataSetList.Count - 1)
-                        continue;
-                    var resData = dataSet.PachinkoDataSetList[0];
-                    var data = new PachinkoData();
-                    data.index = index;
-                    data.StateType = resData.StateType;
-                    data.Times = resData.Times;
-                    data.Sum = resData.Sum;
-                    data.PbChange = resData.PbChange;
-                    data.Award = resData.Award;
-                    temp.Add(data);
-                    index++;
-                }
-                datas.Add(temp);
-            }
-            return datas;
-        }
-
         private List<List<PachinkoData>> Pack(List<Easy.FrameUnity.ESNetwork.PachinkoData> dataList)
         {
             var datas = new List<List<PachinkoData>>();
+            var dataListTemp = new List<Easy.FrameUnity.ESNetwork.PachinkoData>(dataList);
             var line = Math.Ceiling((float)dataList.Count / 2);
             Debug.Log("Line: " + line);
             int index = 0;
@@ -164,14 +116,17 @@ namespace Asobimo.Pachinko
                 {
                     if (index > dataList.Count - 1)
                         continue;
-                    var resData = dataList[0];
+                    var resData = dataListTemp[0];
                     var data = new PachinkoData();
+                    data.Id = resData.Id;
                     data.index = index;
                     data.StateType = resData.StateType;
                     data.Times = resData.Times;
                     data.Sum = resData.Sum;
                     data.PbChange = resData.PbChange;
                     data.Award = resData.Award;
+                    data.Type = resData.Type;
+                    dataListTemp.RemoveAt(0);
                     temp.Add(data);
                     index++;
                 }
@@ -234,23 +189,20 @@ namespace Asobimo.Pachinko
 
         private void SetPageAll()
         {
-            if(_scrollViewAll == null)
-            {
-                _scrollViewAll = new ScrollView<ScrollItemMain>(TabPageAll.Grid, TabPageAll.ItemPrefab);
-            }
-
-            var datas = this.GetTestDatas(PachinkoStateType.Unoccupied);
-            _scrollViewAll.CreateWeight(datas);
         }
 
         private void SetPageRecommend()
         {
-            if(_scrollViewRecommend == null)
+        }
+
+        public void ChangePachinkoState(PachinkoStateDataCast data)
+        {
+            if(data.Type == PachinkoType.Recommend)
             {
-                _scrollViewRecommend = new ScrollView<ScrollViewItem>(TabPageRecommend.Grid, TabPageAll.ItemPrefab);
             }
-            var datas = this.GetTestDatas(PachinkoStateType.Occupied);
-            _scrollViewRecommend.CreateWeight(datas);
+            else
+            {
+            }
         }
 
         public override void Back()
