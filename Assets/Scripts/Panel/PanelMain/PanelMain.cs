@@ -54,6 +54,7 @@ namespace Asobimo.Pachinko
 
         private ScrollView<ScrollItemMain> _scrollViewAll;
         private ScrollView<ScrollViewItem> _scrollViewRecommend;
+		
 
 
         private enum PageType
@@ -71,16 +72,18 @@ namespace Asobimo.Pachinko
             Net.GetPachinkos(OnGetPachinkos);
         }
 
+		private List<List<PachinkoData>> _datasAll;
+		private List<List<PachinkoData>> _datasRecommend;
         private void OnGetPachinkos(GetPachinkosRes res)
         {
             List<Easy.FrameUnity.ESNetwork.PachinkoData> all;
             List<Easy.FrameUnity.ESNetwork.PachinkoData> recommend;
             this.SplitPachinkos(res.PachinkoDataSet.PachinkoDataSetList, out all, out recommend);
 
-            var datasAll = this.Pack(all);
-            var datasRecommend = this.Pack(recommend);
-            this.CreateScrollAll(datasAll);
-            this.CreateScrollRecommend(datasRecommend);
+            _datasAll = this.Pack(all);
+            _datasRecommend = this.Pack(recommend);
+            this.CreateScrollAll(_datasAll);
+            this.CreateScrollRecommend(_datasRecommend);
         }
 
         private void SplitPachinkos(List<Easy.FrameUnity.ESNetwork.PachinkoData> dataList, 
@@ -197,13 +200,47 @@ namespace Asobimo.Pachinko
 
         public void ChangePachinkoState(PachinkoStateDataCast data)
         {
+			List<List<PachinkoData>> pDatas = null;
             if(data.Type == PachinkoType.Recommend)
             {
+				pDatas = _datasRecommend;
             }
             else
             {
+				pDatas = _datasAll;
             }
+
+			if (pDatas == null)
+				return;
+
+			int index;
+			if(this.GetPachinkoIndexById(pDatas, data.Id, out index))
+			{
+				_scrollViewRecommend.FindCellItemAndChange<PachinkoData, ItemPachinko>(index, 
+						(pData, item)=>{
+						pData.StateType = data.StateType;
+						if(item != null)
+						item.SetState(data.StateType);
+						});
+			}
         }
+
+		private bool GetPachinkoIndexById(List<List<PachinkoData>> datas, int id, out int index)
+		{
+			index = -1;
+			foreach(var list in datas)
+			{
+				foreach(var data in list)
+				{
+					if(data.Id == id)
+					{
+						index = data.index;
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 
         public override void Back()
         {

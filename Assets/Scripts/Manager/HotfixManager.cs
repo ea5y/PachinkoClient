@@ -47,7 +47,7 @@ namespace Easy.FrameUnity.Manager
             if(File.Exists(URL.HOTFIX_MAIN_URL))
             {
                 this.LuaEnv = new LuaEnv();
-                this.LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
+                //this.LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
                 this.LuaEnv.AddLoader(CustomLoader);
                 this.LuaEnv.DoString(File.ReadAllText(URL.HOTFIX_MAIN_URL));
             }

@@ -4,6 +4,7 @@
 --package.path = path .. '?.lua'
 --require 'PanelMain'
 --require 'PanelOther'
-require("Net")
-require("PanelLogin")
+
+--require("Net")
+--require("PanelLogin")
 
