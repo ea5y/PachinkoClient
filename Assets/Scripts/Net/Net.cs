@@ -41,8 +41,9 @@ namespace Easy.FrameUnity.ESNetwork
 
 		public enum BrodcastID
 		{
-			ChangePachinkoData = 1001,
-			ChangePachinkoInput = 1002,
+			ChangePachinkoState = 1001,
+			ChangePachinkoData = 1002,
+			ChangePachinkoInput = 1003,
 		}
 
 		private static Queue<NetPackage> _recvResponseQueueCS = new Queue<NetPackage>();
@@ -56,7 +57,10 @@ namespace Easy.FrameUnity.ESNetwork
 
 		private static Dictionary<string, Action<string>> _responseCallbacksCS = new Dictionary<string, Action<string>>();
 		private static Dictionary<string, Action<string>> _responseCallbacksLUA = new Dictionary<string, Action<string>>();
-		private static Dictionary<string, Action<string>> _brodcastActionCS = new Dictionary<string, Action<string>>();
+		private static Dictionary<string, Action<string>> _brodcastActionCS = new Dictionary<string, Action<string>>()
+		{
+			{(int)BrodcastID.ChangePachinkoState + "", OnChangePachinkoState}
+		};
 		private static Dictionary<string, Action<string>> _brodcastActionLUA = new Dictionary<string, Action<string>>();
 
 		private static int _msgId = 1;
@@ -221,6 +225,7 @@ namespace Easy.FrameUnity.ESNetwork
 			while(dispatchQueue.Count > 0)
 			{
 				var package = dispatchQueue.Dequeue();
+				this.LogRevPackage(package);
 				Action<string> action;
 				if(actions.TryGetValue(package.MsgId, out action))
 				{
@@ -228,6 +233,12 @@ namespace Easy.FrameUnity.ESNetwork
 					actions.Remove(package.MsgId);
 				}
 			}
+		}
+
+		private void LogRevPackage(NetPackage package)
+		{
+			var msg = string.Format("Recieve:\nProtocId:{0}\nData:{1}", package.ProtocId, package.Data);
+			Debug.Log(msg);
 		}
 
 		private void DispatchResponseCS()
@@ -383,8 +394,9 @@ namespace Easy.FrameUnity.ESNetwork
         #endregion
 
         #region Bordcast
-        private void OnChangePachinkoState(string res)
+        private static void OnChangePachinkoState(string res)
         {
+			Debug.Log("Brodcast:OnChangePachinkoState ===>\n" + res);
             var data = JsonMapper.ToObject<PachinkoStateDataCast>(res);
             Asobimo.Pachinko.PanelMain.Inst.ChangePachinkoState(data);
             //Find pachinko

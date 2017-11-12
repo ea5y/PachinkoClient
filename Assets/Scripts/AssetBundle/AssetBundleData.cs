@@ -122,7 +122,8 @@ namespace Easy.FrameUnity.EsAssetBundle
 
         private void LoadManifest()
         {
-            string maniBundle = "win";
+            //string maniBundle = "win";
+            string maniBundle = "android";
 #if !UNITY_EDITOR
             maniBundle = "android";
 #endif

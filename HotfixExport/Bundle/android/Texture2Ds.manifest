@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 2301043415
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 88c114020729aff9a6e7a5ee869511b8
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4d96516ff22dda20143f3b58ebfb2b04
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: b9b04ac13b008ee42906626adac5ef03, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/Hotfix/Bundle/Texture2Ds/Texture2Ds.asset
+Dependencies: []

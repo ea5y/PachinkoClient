@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 200276095
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e327b425e271aecd877614acb9d8dad5
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4d96516ff22dda20143f3b58ebfb2b04
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: b9b04ac13b008ee42906626adac5ef03, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/Hotfix/Bundle/Materials/Materials.asset
+Dependencies: []

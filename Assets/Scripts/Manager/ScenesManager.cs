@@ -96,7 +96,7 @@ public class ScenesManager : Singleton<ScenesManager>
 
     private void OnEnterSceneGame1()
     {
-        AssetPoolManager.Inst.FindAsset<AssetScriptableObject, SObjPanelNames>("parameter", "PanelNames", (obj) =>
+        AssetPoolManager.Inst.FindAsset<AssetScriptableObject, SObjPanelNames>("Parameter", "PanelNames", (obj) =>
         {
             foreach (var panelName in obj.PanelNameList)
             {

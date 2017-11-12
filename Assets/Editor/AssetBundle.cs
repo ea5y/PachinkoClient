@@ -93,7 +93,7 @@ namespace Easy.FrameUnity.Editor
 
         public static void SetAssetName()
         {
-            SetShareAssetName();
+            //SetShareAssetName();
             SetPersonalAssetName();
         }
 
@@ -144,11 +144,12 @@ namespace Easy.FrameUnity.Editor
 
         private static string GetBundleName(string bundlePJPath)
         {
-            bundlePJPath = bundlePJPath.Replace('/', '\\');
-            var strArray = bundlePJPath.Split('/');
+            //var strArray = bundlePJPath.Split('/');
+			string[] strArray;
 #if LINUX_EDITOR
             strArray = bundlePJPath.Split('/');
 #elif WIN_EDITOR
+            bundlePJPath = bundlePJPath.Replace('/', '\\');
             strArray = bundlePJPath.Split('\\');
 #endif
             var bundleName = strArray[strArray.Length - 1];
