@@ -37,6 +37,19 @@ namespace Asobimo.Pachinko
                 }
                 _items[i].FillItem(_datas[i]);
             }
+            this.SetCellItemList();
+        }
+
+        public override void SetCellItemList()
+        {
+            if(this.cellItemList == null)
+            {
+                this.cellItemList = new List<ItemPachinko>();
+                for(int i = 0; i < _datas.Count; i++)
+                {
+                    this.cellItemList.Add(_items[i]);
+                }
+            }
         }
     }
 }

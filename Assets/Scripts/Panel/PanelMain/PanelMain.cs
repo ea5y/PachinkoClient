@@ -53,7 +53,7 @@ namespace Asobimo.Pachinko
         private TabPagesManager _pages = new TabPagesManager();
 
         private ScrollView<ScrollItemMain> _scrollViewAll;
-        private ScrollView<ScrollViewItem> _scrollViewRecommend;
+        private ScrollView<ScrollItemMain> _scrollViewRecommend;
 		
 
 
@@ -151,7 +151,7 @@ namespace Asobimo.Pachinko
         {
             if(_scrollViewRecommend == null)
             {
-                _scrollViewRecommend = new ScrollView<ScrollViewItem>(TabPageRecommend.Grid, TabPageRecommend.ItemPrefab);
+                _scrollViewRecommend = new ScrollView<ScrollItemMain>(TabPageRecommend.Grid, TabPageRecommend.ItemPrefab);
             }
             _scrollViewRecommend.CreateWeight(datas);
         }
@@ -201,13 +201,16 @@ namespace Asobimo.Pachinko
         public void ChangePachinkoState(PachinkoStateDataCast data)
         {
 			List<List<PachinkoData>> pDatas = null;
+            ScrollView<ScrollItemMain> scroll = null;
             if(data.Type == PachinkoType.Recommend)
             {
 				pDatas = _datasRecommend;
+                scroll = _scrollViewRecommend;
             }
             else
             {
 				pDatas = _datasAll;
+                scroll = _scrollViewAll;
             }
 
 			if (pDatas == null)
@@ -216,16 +219,30 @@ namespace Asobimo.Pachinko
 			int index;
 			if(this.GetPachinkoIndexById(pDatas, data.Id, out index))
 			{
-				_scrollViewRecommend.FindCellItemAndChange<PachinkoData, ItemPachinko>(index, 
+                /*
+                scroll.FindCellItemAndChange<PachinkoData, ItemPachinko>(index, 
 						(pData, item)=>{
 						pData.StateType = data.StateType;
 						if(item != null)
 						item.SetState(data.StateType);
 						});
+                        */
+                _ChangePachinkoState(scroll, index, data);
 			}
         }
 
-		private bool GetPachinkoIndexById(List<List<PachinkoData>> datas, int id, out int index)
+        private void _ChangePachinkoState(ScrollView<ScrollItemMain> scroll, int index, PachinkoStateDataCast data)
+        {
+            scroll.FindCellItemAndChange<PachinkoData, ItemPachinko>(index,
+                    (pData, item) =>
+                    {
+                        pData.StateType = data.StateType;
+                        if (item != null)
+                            item.SetState(data.StateType);
+                    });
+        }
+
+        private bool GetPachinkoIndexById(List<List<PachinkoData>> datas, int id, out int index)
 		{
 			index = -1;
 			foreach(var list in datas)

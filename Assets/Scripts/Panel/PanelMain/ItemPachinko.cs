@@ -49,6 +49,7 @@ namespace Asobimo.Pachinko
         {
             _data = data as PachinkoData;
             _pachinko = new Pachinko();
+            this.index = _data.index;
 
             this.SetState(_data.StateType);
             this.SetDisplay();

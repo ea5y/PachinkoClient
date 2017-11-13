@@ -660,7 +660,7 @@ namespace CustomControl
         public int index;
     }
 
-    public class ScrollViewItem : MonoBehaviour
+    public abstract class ScrollViewItem : MonoBehaviour
     {
         protected IList cellItemList;
 
@@ -696,6 +696,11 @@ namespace CustomControl
             {
                 transform.localPosition = new Vector3(0, -this.Grid.cellHeight * index, 0);
             }
+        }
+
+        public virtual void SetCellItemList()
+        {
+
         }
 
         public IList GetCellItemList()

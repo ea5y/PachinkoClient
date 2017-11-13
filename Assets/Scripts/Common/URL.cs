@@ -6,8 +6,10 @@ public class URL
     public static readonly string GAME_SERVER_HOST =
 #if UNITY_ANDROID && !UNITY_EDITOR
 		"192.168.0.108";
-#elif UNITY_EDITOR
+#elif UNITY_EDITOR && LINUX_EDITOR
 		"127.0.0.1";
+#elif UNITY_EDITOR && WIN_EDITOR
+        "127.0.0.1";
 #else
 		"";
 #endif
