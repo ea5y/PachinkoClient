@@ -5,11 +5,15 @@ public class URL
 {
     public static readonly string GAME_SERVER_HOST =
 #if UNITY_ANDROID && !UNITY_EDITOR
-		"192.168.0.108";
+		//"192.168.0.108";
+        //"10.252.80.113";
+        "120.26.119.202";
 #elif UNITY_EDITOR && LINUX_EDITOR
 		"127.0.0.1";
 #elif UNITY_EDITOR && WIN_EDITOR
-        "127.0.0.1";
+        //"127.0.0.1";
+        //"192.168.1.181";
+        "120.26.119.202";
 #else
 		"";
 #endif
@@ -26,12 +30,12 @@ public class URL
 
     public static readonly string ASSETBUNDLE_HOST_URL = 
 #if UNITY_ANDROID && !UNITY_EDITOR
-        //"http://120.26.119.202/luwanzhong/resource/android/";
-        "http://192.168.0.108/resource/android/";
+        "http://120.26.119.202/luwanzhong/resource/pk/android/";
+        //"http://192.168.0.108/resource/android/";
 #elif UNITY_IPHONE
         "http://120.26.119.202/luwanzhong/resource/iOS/";
 #elif UNITY_EDITOR && WIN_EDITOR
-        "http://120.26.119.202/luwanzhong/resource/win/";
+        "http://120.26.119.202/luwanzhong/resource/pk/android/";
 #elif UNITY_EDITOR && LINUX_EDITOR
 		"http://127.0.0.1/resource/android/";
 #else
@@ -49,12 +53,14 @@ public class URL
 
     public static readonly string LUA_HOST_URL =
 #if UNITY_ANDROID && !UNITY_EDITOR
-		//"http://120.26.119.202/luwanzhong/resource/lua/";
-        "http://192.168.0.108/resource/Lua/";
+		"http://120.26.119.202/luwanzhong/resource/pk/Lua/";
+        //"http://192.168.0.108/resource/Lua/";
+#elif UNITY_EDITOR && WIN_EDITOR
+		"http://120.26.119.202/luwanzhong/resource/pk/Lua/";
 #elif UNITY_EDITOR && LINUX_EDITOR
         "http://127.0.0.1/resource/Lua/";
 #else
-		"";
+        "";
 #endif
 		
     public static readonly string LUA_LOCAL_URL =

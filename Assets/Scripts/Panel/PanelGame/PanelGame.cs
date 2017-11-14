@@ -194,13 +194,16 @@ namespace Asobimo.Pachinko
 
         private void StartPlayGame()
         {
-            Net.StartPlayGame(_machineData.Data.Id);
-            _machineData.Pachinko.Start();
+            Net.StartPlayGame(_machineData.Data.Id, (res)=> {
+                _machineData.Pachinko.Start();
+            });
         }
         
         public void EndPlayGame()
         {
-            _machineData.Pachinko.End();
+            Net.EndPlayGame(_machineData.Data.Id, (res)=> {
+                _machineData.Pachinko.End();
+            });
         }
 
         private void ShowOperation(bool isShow)

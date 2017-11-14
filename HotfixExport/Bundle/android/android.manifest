@@ -1,31 +1,31 @@
 ManifestFileVersion: 0
-CRC: 1272103023
+CRC: 417198969
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: Materials
+      Name: materials
       Dependencies: {}
     Info_1:
-      Name: PanelExchange
+      Name: panelexchange
       Dependencies: {}
     Info_2:
-      Name: PanelGame
+      Name: panelgame
       Dependencies: {}
     Info_3:
-      Name: PanelLogin
+      Name: panellogin
       Dependencies: {}
     Info_4:
-      Name: PanelMain
+      Name: panelmain
       Dependencies: {}
     Info_5:
-      Name: PanelTopbar
+      Name: paneltopbar
       Dependencies: {}
     Info_6:
-      Name: Parameter
+      Name: parameter
       Dependencies: {}
     Info_7:
-      Name: Shaders
+      Name: shaders
       Dependencies: {}
     Info_8:
-      Name: Texture2Ds
+      Name: texture2ds
       Dependencies: {}

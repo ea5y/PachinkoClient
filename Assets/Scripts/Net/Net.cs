@@ -12,13 +12,15 @@ using UnityEngine;
 using LitJson;
 using Easy.FrameUnity.ESThread;
 using Easy.FrameUnity.Util;
+using System.IO;
+using ICSharpCode.SharpZipLib.GZip;
 
 namespace Easy.FrameUnity.ESNetwork
 {
 	public class NetPackage
 	{
-		public string MsgId;
-		public string ProtocId;
+		public int MsgId;
+		public int ProtocId;
 		public static string Sid;
 		public string Uid;
 		public string Type;
@@ -55,13 +57,13 @@ namespace Easy.FrameUnity.ESNetwork
 		private static object _syncBrodQueueCS = new object();
 		private static object _syncBrodQueueLUA = new object();
 
-		private static Dictionary<string, Action<string>> _responseCallbacksCS = new Dictionary<string, Action<string>>();
-		private static Dictionary<string, Action<string>> _responseCallbacksLUA = new Dictionary<string, Action<string>>();
-		private static Dictionary<string, Action<string>> _brodcastActionCS = new Dictionary<string, Action<string>>()
+		private static Dictionary<int, Action<string>> _responseCallbacksCS = new Dictionary<int, Action<string>>();
+		private static Dictionary<int, Action<string>> _responseCallbacksLUA = new Dictionary<int, Action<string>>();
+		private static Dictionary<int, Action<string>> _brodcastActionCS = new Dictionary<int, Action<string>>()
 		{
-			{(int)BrodcastID.ChangePachinkoState + "", OnChangePachinkoState}
+			{(int)BrodcastID.ChangePachinkoState, OnChangePachinkoState}
 		};
-		private static Dictionary<string, Action<string>> _brodcastActionLUA = new Dictionary<string, Action<string>>();
+		private static Dictionary<int, Action<string>> _brodcastActionLUA = new Dictionary<int, Action<string>>();
 
 		private static int _msgId = 1;
 		public static int MsgId
@@ -140,14 +142,23 @@ namespace Easy.FrameUnity.ESNetwork
 			int pos = 0;
 			int bytesLen = GetInt(bytes, ref pos);
 			if(bytesLen != bytes.Length)
-				throw new Exception("Package is not full!");
+            {
+                if(IsGzip(bytes))
+                {
+                    bytes = Decompression(bytes);
+                }
+                else
+                {
+                    throw new Exception("Package is not full!");
+                }
+            }
 
 			statusCode = GetInt(bytes, ref pos);
 
 			var package = new NetPackage();
-			package.MsgId = GetInt(bytes, ref pos).ToString();
+            package.MsgId = GetInt(bytes, ref pos);
 			var Description = GetString(bytes, ref pos);
-			package.ProtocId = GetInt(bytes, ref pos).ToString();
+			package.ProtocId = GetInt(bytes, ref pos);
 			var StrTime = GetString(bytes, ref pos);
 			package.Type = GetString(bytes, ref pos);
 			package.Version = GetString(bytes, ref pos);
@@ -174,6 +185,28 @@ namespace Easy.FrameUnity.ESNetwork
             }
             return val;
 		}
+
+        private static bool IsGzip(byte[] data)
+        {
+            return data[0] == 0x1f && data[1] == 0x8b && data[2] == 0x08 && data[3] == 0x00;
+        }
+
+        private static byte[] Decompression(byte[] buf)
+        {
+            using (var mStream = new MemoryStream())
+            using (var gzipStream = new GZipInputStream(new MemoryStream(buf)))
+            {
+                int count = 0;
+                byte[] data = new byte[256];
+                while((count = gzipStream.Read(data, 0, data.Length)) != 0)
+                {
+                    mStream.Write(data, 0, count);
+                }
+
+                byte[] result = mStream.ToArray();
+                return result;
+            }
+        }
 
 		public static void EnqueueResponseQueueCS(NetPackage package)
 		{
@@ -220,14 +253,15 @@ namespace Easy.FrameUnity.ESNetwork
 			return dispatchQueue;
 		}
 
-		private void Dispatch(Queue<NetPackage> dispatchQueue, Dictionary<string, Action<string>> actions)
+		private void Dispatch(Queue<NetPackage> dispatchQueue, Dictionary<int, Action<string>> actions)
 		{
 			while(dispatchQueue.Count > 0)
 			{
 				var package = dispatchQueue.Dequeue();
 				this.LogRevPackage(package);
+                var key = package.Type == "response" ? package.MsgId : package.ProtocId;
 				Action<string> action;
-				if(actions.TryGetValue(package.MsgId, out action))
+				if(actions.TryGetValue(key, out action))
 				{
 					action.Invoke(package.Data);
 					actions.Remove(package.MsgId);
@@ -278,12 +312,12 @@ namespace Easy.FrameUnity.ESNetwork
 			}
 		}
 
-		private static void AddActionToResponseCallbacksCS(string msgId, Action<string> action)
+		private static void AddActionToResponseCallbacksCS(int msgId, Action<string> action)
 		{
 			_responseCallbacksCS.Add(msgId, action);
 		}
 
-        public static void AddActionToResponseCallbacksLUA(string msgId, Action<string> action)
+        public static void AddActionToResponseCallbacksLUA(int msgId, Action<string> action)
         {
             _responseCallbacksLUA.Add(msgId, action);
         }
@@ -312,8 +346,8 @@ namespace Easy.FrameUnity.ESNetwork
 			if(data != null)
 				dataJson = JsonMapper.ToJson(data);
 			var package = new NetPackage();
-			package.MsgId = MsgId.ToString();
-			package.ProtocId = protocId.ToString();
+			package.MsgId = MsgId;
+			package.ProtocId = protocId;
 			package.Data = dataJson;
 			var bytes = Pack(package);
 
@@ -332,8 +366,8 @@ namespace Easy.FrameUnity.ESNetwork
 			if(data != null)
 				dataJson = JsonMapper.ToJson(data);
 			var package = new NetPackage();
-			package.MsgId = msgId.ToString();
-			package.ProtocId = protocId.ToString();
+			package.MsgId = msgId;
+			package.ProtocId = protocId;
 			package.Data = dataJson;
 			var bytes = Pack(package);
 
@@ -369,21 +403,21 @@ namespace Easy.FrameUnity.ESNetwork
 
         }
 
-        public static void StartPlayGame(int pachinkoId)
+        public static void StartPlayGame(int pachinkoId, Action<DealSwitchRes> callback)
         {
             var data = new DealSwitchReq();
             data.PachinkoId = pachinkoId;
             data.SwitchType = "on";
-            Action<DealSwitchRes> callback = (res) => { };
+            //Action<DealSwitchRes> callback = (res) => { };
             Send(data, (int)ActionID.DealSwitch, callback);
         }
 
-        public static void EndPlayGame(int pachinkoId)
+        public static void EndPlayGame(int pachinkoId, Action<DealSwitchRes> callback)
         {
             var data = new DealSwitchReq();
             data.PachinkoId = pachinkoId;
             data.SwitchType = "off";
-            Action<DealSwitchRes> callback = (res) => { };
+            //Action<DealSwitchRes> callback = (res) => { };
             Send(data, (int)ActionID.DealSwitch, callback);
         }
 
