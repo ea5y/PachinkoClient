@@ -3,41 +3,54 @@ using System.Collections;
 
 public class URL
 {
+    #region Server
+    public static readonly int GAME_SERVER_PORT = 9001;
     public static readonly string GAME_SERVER_HOST =
-#if UNITY_ANDROID && !UNITY_EDITOR
-		//"192.168.0.108";
-        //"10.252.80.113";
-        "120.26.119.202";
-#elif UNITY_EDITOR && LINUX_EDITOR
+#if GAMESERVER_HOST_DEBUG
 		"127.0.0.1";
-#elif UNITY_EDITOR && WIN_EDITOR
-        //"127.0.0.1";
-        //"192.168.1.181";
+#elif GAMESERVER_HOST_RELEASE
         "120.26.119.202";
 #else
-		"";
+        "";
 #endif
-    public static readonly int GAME_SERVER_PORT = 9001;
 
-    public static readonly string ASSETBUNDLE_INPUT_URL = Application.dataPath + "/Hotfix/Bundle/";
-    public static readonly string ASSETBUNDLE_OUTPUT_URL = "HotfixExport/";
+    public static readonly string RESOURCE_SERVER_HOST = 
+#if RESOURCESERVER_HOST_DEBUG
+        "127.0.0.1";
+#elif RESOURCESERVER_HOST_RELEASE
+        "120.26.119.202";
+#else
+        "";
+#endif
+    #endregion
+
+    #region Hotfix 
+    #region Export
+    public static readonly string HOTFIXEXPORT_OUTPUT_URL = "HotfixExport/";
+    public static readonly string HOTFIXEXPORT_INPUT_URL = Application.dataPath + "/Hotfix/";
+    public static readonly string ASSETBUNDLE_INPUT_URL = HOTFIXEXPORT_INPUT_URL + "Bundle/";
+    public static readonly string ASSETBUNDLE_OUTPUT_URL = HOTFIXEXPORT_OUTPUT_URL + "bundle/";
     public static readonly string ASSETBUNDLE_PERSONAL_URL = Application.dataPath + "/Hotfix/Bundle/Personal/";
     public static readonly string ASSETBUNDLE_SHARE_URL = Application.dataPath + "/Hotfix/Bundle/Share/";
 
+    public static readonly string LUA_INPUT_URL = HOTFIXEXPORT_INPUT_URL + "Lua/";
+    public static readonly string LUA_OUTPUT_URL = HOTFIXEXPORT_OUTPUT_URL + "lua/";
+    #endregion
+
     public static readonly string PERSISTENTDATA_URL = Application.persistentDataPath + "/";
-
     public static readonly string RESOURCE_FILE_LIST_FILENAME = "ResourceFileList.json";
-
+    #region AssetBundle
     public static readonly string ASSETBUNDLE_HOST_URL = 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        "http://120.26.119.202/luwanzhong/resource/pk/android/";
-        //"http://192.168.0.108/resource/android/";
+#if UNITY_ANDROID
+        "http://" + RESOURCE_SERVER_HOST + "/luwanzhong/resource/pk/bundle/android/";
 #elif UNITY_IPHONE
-        "http://120.26.119.202/luwanzhong/resource/iOS/";
-#elif UNITY_EDITOR && WIN_EDITOR
-        "http://120.26.119.202/luwanzhong/resource/pk/android/";
-#elif UNITY_EDITOR && LINUX_EDITOR
-		"http://127.0.0.1/resource/android/";
+        "http://" + RESOURCE_SERVER_HOST + "/luwanzhong/resource/pk/bundle/ios/";
+#elif UNITY_STANDALONE_WIN
+        "http://" + RESOURCE_SERVER_HOST + "/luwanzhong/resource/pk/bundle/win/";
+#elif UNITY_STANDALONE_LINUX
+        "http://" + RESOURCE_SERVER_HOST + "/luwanzhong/resource/pk/bundle/linux/";
+#elif UNITY_STANDALONE_OSX
+        "http://" + RESOURCE_SERVER_HOST + "/luwanzhong/resource/pk/bundle/osx/";
 #else
 		"";
 #endif
@@ -50,18 +63,11 @@ public class URL
 #endif
 
     public static readonly string FILE_ASSETBUNDLE_LOCAL_URL = "file:///" + ASSETBUNDLE_LOCAL_URL;
+    #endregion
 
+    #region Lua
     public static readonly string LUA_HOST_URL =
-#if UNITY_ANDROID && !UNITY_EDITOR
-		"http://120.26.119.202/luwanzhong/resource/pk/Lua/";
-        //"http://192.168.0.108/resource/Lua/";
-#elif UNITY_EDITOR && WIN_EDITOR
-		"http://120.26.119.202/luwanzhong/resource/pk/Lua/";
-#elif UNITY_EDITOR && LINUX_EDITOR
-        "http://127.0.0.1/resource/Lua/";
-#else
-        "";
-#endif
+        "http://" + RESOURCE_SERVER_HOST + "/luwanzhong/resource/pk/lua/";
 		
     public static readonly string LUA_LOCAL_URL =
 #if UNITY_EDITOR && EDITOR_MODE
@@ -71,6 +77,8 @@ public class URL
 #endif
 
     public static readonly string HOTFIX_MAIN_URL = LUA_LOCAL_URL + "Hotfix.lua";
+    #endregion
+    #endregion
 
     public static readonly string DEBUG_CONFIG = 
 #if UNITY_ANDROID && !UNITY_EDITOR

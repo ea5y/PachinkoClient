@@ -87,6 +87,7 @@ namespace Easy.FrameUnity.ESNetwork
         public int Id;
         public PachinkoStateType StateType;
         public PachinkoType Type;
+        public int OwnerUserId;
     }
     #endregion
 }

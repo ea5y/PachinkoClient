@@ -128,7 +128,7 @@ namespace Easy.FrameUnity.ESNetwork
 		{
 			var packageStr = string.Format("MsgId={0}&ActionId={1}&Sid={2}&Uid={3}&Data={4}",
 					package.MsgId, package.ProtocId, NetPackage.Sid, package.Uid, package.Data);
-			Debug.Log("Send:" + packageStr);
+			//Debug.Log("Send:" + packageStr);
 			byte[] tempBytes = Encoding.ASCII.GetBytes(packageStr);
 			byte[] len = BitConverter.GetBytes(tempBytes.Length);
 			byte[] resultBytes = new byte[tempBytes.Length + len.Length];
@@ -271,7 +271,7 @@ namespace Easy.FrameUnity.ESNetwork
 
 		private void LogRevPackage(NetPackage package)
 		{
-			var msg = string.Format("Recieve:\nProtocId:{0}\nData:{1}", package.ProtocId, package.Data);
+			var msg = string.Format("{0} Recieve:\nProtocId:{1}\nData:{2}", package.Type, package.ProtocId, package.Data);
 			Debug.Log(msg);
 		}
 

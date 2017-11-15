@@ -275,7 +275,7 @@ namespace Easy.FrameUnity.Util
         {
             lock(this)
             {
-                Debug.Log("ObjectPool GCColleting...");
+                //Debug.Log("ObjectPool GCColleting...");
                 var tempTable = new Hashtable(_hashTableObject);
                 foreach(DictionaryEntry de in tempTable)
                 {
@@ -286,7 +286,7 @@ namespace Easy.FrameUnity.Util
                         if (timeSpan >= 10)
                         {
                             var msg = string.Format("Collection Asset: {0}", pItem.PoolObject.GetType().Name);
-                            Debug.Log(msg);
+                            //Debug.Log(msg);
                             _hashSetFreeIndex.Remove(pItem.Identifier);
                             _hashTableObject.Remove(pItem.Identifier);
 

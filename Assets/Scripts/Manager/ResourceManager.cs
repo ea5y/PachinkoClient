@@ -229,9 +229,9 @@ namespace Easy.FrameUnity.Manager
                         Debug.Log("Local resource name: " + fileInfo.Name);
                         //check md5
                         var localFileMd5 = IOHelperUtil.GetFileMD5(fileInfo.FullName);
-                        Debug.Log(string.Format("HostMd5: {0}\nLocalMd5: {1}", fileHost.md5, localFileMd5));
                         if (fileHost.md5 != localFileMd5)
                         {
+                            Debug.Log(string.Format("HostMd5: {0}\nLocalMd5: {1}", fileHost.md5, localFileMd5));
                             _willLoadList.Add(fileHost);
                             _totalBytesLength += long.Parse(fileHost.length);
                         }

@@ -238,7 +238,16 @@ namespace Asobimo.Pachinko
                     {
                         pData.StateType = data.StateType;
                         if (item != null)
-                            item.SetState(data.StateType);
+                        {
+                            if(data.OwnerUserId == Player.Inst.UserData.UserId)
+                            {
+                                item.SetState(PachinkoStateType.Owned);
+                            }
+                            else
+                            {
+                                item.SetState(data.StateType);
+                            }
+                        }
                     });
         }
 

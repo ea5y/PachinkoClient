@@ -26,6 +26,7 @@ namespace Asobimo.Pachinko
         public int PbChange;
         public int Award;
         public PachinkoType Type;
+        public int OwnerUserId;
     }
 
     public class ItemPachinko : ScrollViewCellItem
@@ -51,7 +52,14 @@ namespace Asobimo.Pachinko
             _pachinko = new Pachinko();
             this.index = _data.index;
 
-            this.SetState(_data.StateType);
+            if(_data.OwnerUserId == Player.Inst.UserData.UserId)
+            {
+                this.SetState(PachinkoStateType.Owned);
+            }
+            else
+            {
+                this.SetState(_data.StateType);
+            }
             this.SetDisplay();
             this.SetBtnEvent();
             Debug.Log("ItemMain index: " + _data.index);
@@ -66,6 +74,9 @@ namespace Asobimo.Pachinko
                     break;
                 case PachinkoStateType.Occupied:
                     this.SetOccupied();
+                    break;
+                case PachinkoStateType.Owned:
+                    this.SetOwned();
                     break;
                 case PachinkoStateType.Maintain:
                     this.SetMaintain();
@@ -91,6 +102,13 @@ namespace Asobimo.Pachinko
             _pachinko.State = _pachinko.OccupiedState;
             this.ImgStatus.color = Color.red;
             this.LblStatus.text = "Occupied";
+        }
+
+        private void SetOwned()
+        {
+            _pachinko.State = _pachinko.OwnedState;
+            this.ImgStatus.color = Color.blue;
+            this.LblStatus.text = "Owned";
         }
 
         private void SetMaintain()

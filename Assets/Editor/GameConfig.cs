@@ -8,15 +8,39 @@ using UnityEditor;
 using UnityEngine;
 public class GameConfig : EditorWindow
 {
-    public enum OSType
+    public enum OS
     {
         Windows,
         Linux
     }
 
+    public enum Platform
+    {
+        Android,
+        Ios,
+        Win,
+        Linux,
+    }
+
+    public enum GameServerHost
+    {
+        Release,
+        Debug,
+    }
+
+    public enum ResourceServerHost
+    {
+        Release,
+        Debug,
+    }
+
     private bool _isEditorMode;
     private bool _isHotfixEnable;
-    private OSType _oSType;
+
+    private OS _os;
+    private Platform _platform;
+    private GameServerHost _gameServerHost;
+    private ResourceServerHost _resourceServerHost;
 
     [MenuItem("GameConfig/Open")]
     public static void ShowWindow()
@@ -32,7 +56,12 @@ public class GameConfig : EditorWindow
 
         _isEditorMode = EditorGUILayout.Toggle("Is Editor Mode", _isEditorMode);
         _isHotfixEnable = EditorGUILayout.Toggle("Is Hotfix Enable", _isHotfixEnable);
-        _oSType = (OSType)EditorGUILayout.EnumPopup("OS", _oSType);
+
+        _os = (OS)EditorGUILayout.EnumPopup("OS", _os);
+        _platform = (Platform)EditorGUILayout.EnumPopup("Platform", _platform);
+        _gameServerHost = (GameServerHost)EditorGUILayout.EnumPopup("GameServerHost", _gameServerHost);
+        _resourceServerHost = (ResourceServerHost)EditorGUILayout.EnumPopup("ResourceServerHost", _resourceServerHost);
+
 
         if(GUILayout.Button("Save"))
         {
@@ -43,16 +72,24 @@ public class GameConfig : EditorWindow
 
     private void LoadConfig()
     {
-        _oSType = (OSType)EditorPrefs.GetInt("GameConfig.OSType", (int)OSType.Windows);
         _isEditorMode = EditorPrefs.GetBool("GameConfig.IsEditorMode", false);
         _isHotfixEnable = EditorPrefs.GetBool("GameConfig.IsHotfixEnable", false);
+
+        _os = (OS)EditorPrefs.GetInt("GameConfig.OS", (int)OS.Windows);
+        _platform = (Platform)EditorPrefs.GetInt("GameConfig.Platform", (int)Platform.Android);
+        _gameServerHost = (GameServerHost)EditorPrefs.GetInt("GameConfig.GameServerHost", (int)GameServerHost.Debug);
+        _resourceServerHost = (ResourceServerHost)EditorPrefs.GetInt("GameConfig.ResourceServerHost", (int)ResourceServerHost.Debug);
     }
 
     private void SaveConfig()
     {
-        EditorPrefs.SetInt("GameConfig.OSType", (int)_oSType);
         EditorPrefs.SetBool("GameConfig.IsEditorMode", _isEditorMode);
         EditorPrefs.SetBool("GameConfig.IsHotfixEnable", _isHotfixEnable);
+
+        EditorPrefs.SetInt("GameConfig.OS", (int)_os);
+        EditorPrefs.SetInt("GameConfig.Platform", (int)_platform);
+        EditorPrefs.SetInt("GameConfig.GameServerHost", (int)_gameServerHost);
+        EditorPrefs.SetInt("GameConfig.ResourceServerHost", (int)_resourceServerHost);
     }
 
     private void SetSymbols()
@@ -61,19 +98,72 @@ public class GameConfig : EditorWindow
         symbols += _isEditorMode == true ? "EDITOR_MODE;" : "";
         symbols += _isHotfixEnable == true ? "HOTFIX_ENABLE;INJECT_WITHOUT_TOOL;" : "";
 
-        switch(_oSType)
-        {
-            case OSType.Windows:
-                symbols += "WIN_EDITOR;";
-                break;
-            case OSType.Linux:
-                symbols += "LINUX_EDITOR;";
-                break;
-        }
+        this.AddSymbolOS(ref symbols);
+        this.AddSymbolPlatform(ref symbols);
+        this.AddSymbolGameServerHost(ref symbols);
+        this.AddSymbolResourceServerHost(ref symbols);
 
         this.SetDefineSymbols(BuildTargetGroup.Android, symbols);
         this.SetDefineSymbols(BuildTargetGroup.Standalone, symbols);
         this.SetDefineSymbols(BuildTargetGroup.iOS, symbols);
+    }
+
+    private void AddSymbolOS(ref string symbols)
+    {
+        switch(_os)
+        {
+            case OS.Windows:
+                symbols += "WIN_EDITOR;";
+                break;
+            case OS.Linux:
+                symbols += "LINUX_EDITOR;";
+                break;
+        }
+    }
+
+    private void AddSymbolPlatform(ref string symbols)
+    {
+        switch(_platform)
+        {
+            case Platform.Android:
+                symbols += "PLATFORM_ANDROID;";
+                break;
+            case Platform.Ios:
+                symbols += "PLATFORM_IOS;";
+                break;
+            case Platform.Win:
+                symbols += "PLATFORM_WIN;";
+                break;
+            case Platform.Linux:
+                symbols += "PLATFORM_LINUX;";
+                break;
+        }
+    }
+
+    private void AddSymbolGameServerHost(ref string symbols)
+    {
+        switch(_gameServerHost)
+        {
+            case GameServerHost.Debug:
+                symbols += "GAMESERVER_HOST_DEBUG;";
+                break;
+            case GameServerHost.Release:
+                symbols += "GAMESERVER_HOST_RELEASE;";
+                break;
+        }
+    }
+
+    private void AddSymbolResourceServerHost(ref string symbols)
+    {
+        switch(_resourceServerHost)
+        {
+            case ResourceServerHost.Debug:
+                symbols += "RESOURCESERVER_HOST_DEBUG;";
+                break;
+            case ResourceServerHost.Release:
+                symbols += "RESOURCESERVER_HOST_RELEASE;";
+                break;
+        }
     }
 
     private void SetDefineSymbols(BuildTargetGroup target, string symbols)

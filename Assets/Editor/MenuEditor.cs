@@ -27,10 +27,10 @@ namespace Easy.FrameUnity.Editor
             AssetBundle.ExportForWin();
         }
         
-        [MenuItem("Hotfix/Create LuaFileList")]
+        [MenuItem("Hotfix/Export Lua")]
         public static void CreateLuaFileList()
         {
-            AssetBundle.CreateResourceFileList<LuaFile>(URL.ASSETBUNDLE_OUTPUT_URL + "Lua/");
+            AssetBundle.ExportLua();
         }
 
         [MenuItem("Hotfix/Create ScriptableObject")]

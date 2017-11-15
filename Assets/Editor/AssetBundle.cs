@@ -17,37 +17,75 @@ namespace Easy.FrameUnity.Editor
     {
         public static void ExportForAndroid()
         {
-            var outputpath = URL.ASSETBUNDLE_OUTPUT_URL + "Bundle/android/";
+            var outputpath = URL.ASSETBUNDLE_OUTPUT_URL + "android/";
             BuildAssetBundle(outputpath);
         }
 
         public static void ExportForIOS()
         {
-            var outputpath = URL.ASSETBUNDLE_OUTPUT_URL + "Bundle/ios/";
+            var outputpath = URL.ASSETBUNDLE_OUTPUT_URL + "ios/";
             BuildAssetBundle(outputpath);
         }
 
         public static void ExportForWin()
         {
-            var outputpath = URL.ASSETBUNDLE_OUTPUT_URL + "Bundle/win/";
+            var outputpath = URL.ASSETBUNDLE_OUTPUT_URL + "win/";
             BuildAssetBundle(outputpath);
         }
+
+        public static void ExportForLinux()
+        {
+
+        }
+
+        public static void ExportForOSX()
+        {
+
+        }
+
+        public static void ExportLua()
+        {
+            var outputPath = URL.LUA_OUTPUT_URL;
+            var inputPath = URL.LUA_INPUT_URL;
+            CreateResourceFileList<LuaFile>(inputPath);
+            CopyLuaFile(inputPath, outputPath);
+        }
+
+        private static void CopyLuaFile(string inputPath, string outputPath)
+        {
+            if (!Directory.Exists(outputPath))
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+            
+            var folder = new DirectoryInfo(inputPath);
+            string msg = string.Format("Lua move from {0} to {1}", folder.FullName, outputPath);
+            Debug.Log(msg);
+
+            FileSystemInfo[] fileInfos = folder.GetFileSystemInfos();
+            foreach(var file in fileInfos)
+            {
+                if (File.Exists(outputPath + file.Name))
+                    File.Delete(outputPath + file.Name);
+                File.Copy(file.FullName, outputPath + file.Name);
+            }
+        }
         
-        public static void BuildAssetBundle(string outputpath)
+        public static void BuildAssetBundle(string outputPath)
         {
             ClearAssetBundlesName();
             SetAssetName();
 
-            if (!Directory.Exists(outputpath))
+            if (!Directory.Exists(outputPath))
             {
-                Directory.CreateDirectory(outputpath);
+                Directory.CreateDirectory(outputPath);
             }
-            BuildPipeline.BuildAssetBundles(outputpath, 0, EditorUserBuildSettings.activeBuildTarget);
+            BuildPipeline.BuildAssetBundles(outputPath, 0, EditorUserBuildSettings.activeBuildTarget);
             AssetDatabase.Refresh();
             Debug.Log("Build AssetBundles Completed!");
 
             ClearAssetBundlesName();
-            CreateResourceFileList<BundleFile>(outputpath);
+            CreateResourceFileList<BundleFile>(outputPath);
         }
 
         public static void CreateResourceFileList<T>(string inputPath) where T : ResourceFile, new()
@@ -192,46 +230,6 @@ namespace Easy.FrameUnity.Editor
                 AssetImporter assetImporter = AssetImporter.GetAtPath(bundlePJPath);
                 assetImporter.assetBundleName = bundleName;
             }
-        }
-
-        private static void BuildAssetBundlesBuildMap(string bundleName, List<string> assetPJPathList)
-        {
-            AssetBundleBuild[] buildMap = new AssetBundleBuild[1];
-            buildMap[0].assetBundleName = bundleName;
-            buildMap[0].assetNames = assetPJPathList.ToArray();
-
-            BuildPipeline.BuildAssetBundles(_outPath, buildMap, BuildAssetBundleOptions.ChunkBasedCompression, _buildTarget);
-        }
-
-        private static void BuildMaterialsBuildMap()
-        {
-            var path = "Assets/Hotfix/Bundle/Materials/Materials.asset";
-            BuildBuildMap(path, "materials_map");
-        }
-
-        private static void BuildTexture2DsBuildMap()
-        {
-            var path = "Assets/Hotfix/Bundle/Texture2Ds/Texture2Ds.asset";
-            BuildBuildMap(path, "texture2ds_map");
-        }
-
-        private static void BuildShadersBuildMap()
-        {
-            var path = "Assets/Hotfix/Bundle/Shaders/Shaders.asset";
-            BuildBuildMap(path, "shaders_map");
-        }
-
-        private static void BuildBuildMap(string path, string bundleName)
-        {
-            var asset = AssetDatabase.LoadAssetAtPath<SObjInjection>(path);
-            List<string> assetPJPathList = new List<string>();
-            foreach(var inject in asset.Injections)
-            {
-                var assetPJPath = GetBundlePJPath(inject.Object);
-                assetPJPathList.Add(assetPJPath);
-            }
-
-            BuildAssetBundlesBuildMap(bundleName, assetPJPathList);
         }
 
         private static string _outPath = URL.ASSETBUNDLE_OUTPUT_URL + "Bundle/win/";

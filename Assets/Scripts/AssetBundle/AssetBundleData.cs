@@ -160,16 +160,16 @@ namespace Easy.FrameUnity.EsAssetBundle
         {
             lock(_syncBundleDic)
             {
-                Debug.Log("UnLoading bundle...");
+                //Debug.Log("UnLoading bundle...");
                 var tempList = new List<string>(bundleDic.Keys);
-                Debug.Log("Before unload bundleDic's count: " + bundleDic.Count);
+                //Debug.Log("Before unload bundleDic's count: " + bundleDic.Count);
                 foreach (var key in tempList)
                 {
-                    Debug.Log("BundleName: " + key);
+                    //Debug.Log("BundleName: " + key);
                     bundleDic[key].bundle.Unload(false);
                     bundleDic[key].IsBundleLoaded = false;
                     bundleDic.Remove(key);
-                    Debug.Log("After unload bundleDic's count: " + bundleDic.Count);
+                    //Debug.Log("After unload bundleDic's count: " + bundleDic.Count);
                 }
             }
         }

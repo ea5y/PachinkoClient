@@ -47,7 +47,8 @@ namespace Asobimo.Pachinko
         public void OnBtnLoginClick()
         {
             Net.Login(_data, Password.value, (res)=>{
-                    Player.Inst.BallsNum = res.UserData.BallsNum;
+                    Player.Inst.UserData = res.UserData;
+                    //Player.Inst.BallsNum = res.UserData.BallsNum;
 					NetPackage.Sid = res.SessionId;
                     _data.Sid = res.SessionId;
                     IOHelperUtil.SaveToJson<RegisterDataReq>(_data, URL.DEBUG_CONFIG);

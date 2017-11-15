@@ -35,6 +35,8 @@ namespace Asobimo.Pachinko
                     _items[i].gameObject.SetActive(false);
                     continue;
                 }
+                if (_items[i].gameObject.activeSelf == false)
+                    _items[i].gameObject.SetActive(true);
                 _items[i].FillItem(_datas[i]);
             }
             this.SetCellItemList();

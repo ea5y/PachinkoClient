@@ -4,6 +4,7 @@
 //===Date: 2017-09-11 10:13
 //================================
 
+using Easy.FrameUnity.ESNetwork;
 using System;
 using UnityEngine;
 namespace Asobimo.Pachinko
@@ -54,19 +55,23 @@ namespace Asobimo.Pachinko
         }
 
         public event EventHandler<PlayerBallsNumArgs> OnBallsNumChanged = (s, e)=>{};
-        private int _ballsNum = 0;
+        //private int _ballsNum = 0;
         public int BallsNum
         {
             get
             {
-                return _ballsNum;
+                //return _ballsNum;
+                return this.UserData.BallsNum;
             }
             set
             {
-                _ballsNum = value;
-                this.OnBallsNumChanged(this, new PlayerBallsNumArgs(_ballsNum));
+                //_ballsNum = value;
+                this.UserData.BallsNum = value;
+                this.OnBallsNumChanged(this, new PlayerBallsNumArgs(BallsNum));
             }
         }
+
+        public UserData UserData;
 
         private static Player _inst;
         public static Player Inst
@@ -82,7 +87,7 @@ namespace Asobimo.Pachinko
         public void Init()
         {
             this.OnStateChanged(this, new PlayerStateArgs(_state));
-            this.OnBallsNumChanged(this, new PlayerBallsNumArgs(_ballsNum));
+            this.OnBallsNumChanged(this, new PlayerBallsNumArgs(BallsNum));
         }
     }
 }
